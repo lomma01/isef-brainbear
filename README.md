@@ -1,6 +1,5 @@
 # Brainbear - A Quiz Web App
 ## Projekt Software Engineering (ISEF) @ IU
-
 ### Conception and prototypical implementation of a cooperative and collaborative online quiz system.
 The goal of the case study is the conception and prototypical implementation of an online quiz system that supports students of the distance learning program of the IU in the consolidation of learning content in preparation for the exam.
 
@@ -10,4 +9,10 @@ The system should be operable via Internet browser. The creation and input of th
 
 In addition to the conception, the basic usability of the prototypical implementation should be demonstrated and suitably documented for practical use. In particular, the requirements or prerequisites for the infrastructure to ensure continuous operation are also necessary.
 
-Translated with www.DeepL.com/Translator (free version)
+Translated with https://www.DeepL.com/Translator (free version)
+
+### How to install packages and dependencies with poetry:
+`poetry install`
+
+#### Documentation Poetry:
+https://python-poetry.org/docs/cli/
