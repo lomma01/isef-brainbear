@@ -1,7 +1,5 @@
-<<<<<<< HEAD
 *.pyc
 students.sqlite3
-=======
 config.py
 auth.py
->>>>>>> main
+
