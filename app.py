@@ -1,7 +1,4 @@
 from flask import flash, request
-import sqlite3 as sql
-from functools import wraps
-import json
 from flask import Flask
 from flask import redirect
 from flask import render_template
@@ -9,7 +6,10 @@ from flask import session
 from flask import url_for
 from authlib.integrations.flask_client import OAuth
 from six.moves.urllib.parse import urlencode
+from functools import wraps
 import auth
+import json
+import sqlite3 as sql
 
 app = Flask(__name__)
 
@@ -92,32 +92,6 @@ def rank():
                            userinfo_pretty=json.dumps(session['jwt_payload'],
                                                       indent=4))
 
-
-@app.route('/addrec', methods=['GET', 'POST'])
-def addrec():
-    if request.method == 'POST':
-        try:
-            userinfo = session['profil']
-            username = userinfo['name']
-            email = request.form['email']
-         
-            with sql.connect("database.db") as con:
-                cur = con.cursor()
-                cur.execute("INSERT INTO students (username,email) VALUES (?,?)",(username,email) )
-            
-                con.commit()
-                msg = "Record successfully added"
-        except:
-            con.rollback()
-            msg = "error in insert operation"
-      
-        finally:
-            return render_template( "dashboard.html",
-                                    userinfo=session['profile'],
-                                    userinfo_pretty=json.dumps(session['jwt_payload'],
-                                    indent=4))
-            con.close()
-
 @app.route('/list')
 def list():
     con = sql.connect("database.db")
@@ -156,7 +130,20 @@ def callback_handling():
         'name': userinfo['name'],
         'picture': userinfo['picture']
     }
-    return redirect('/dashboard')
+    
+    name = userinfo['name']
+    nickname = userinfo['nickname']
+    picture = userinfo['picture']
+    user_id = userinfo['sub']
+    
+    with sql.connect("database.db") as con:
+        cur = con.cursor()
+        cur.execute("INSERT INTO students (name,nickname,picture,user_id) VALUES (?,?,?,?)",(name,nickname,picture,user_id) )
+            
+        con.commit()
+        msg = "Record successfully added"
+        #con.close()
+        return redirect('/dashboard')
 
 
 @app.route('/login')
