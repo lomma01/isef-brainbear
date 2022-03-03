@@ -1,4 +1,5 @@
 from flask import Flask, render_template
+from database import *
 
 app = Flask(__name__)
 
@@ -45,6 +46,11 @@ def signup():
 @app.route('/about')
 def about():
     return render_template('about.html')
+
+
+@app.route('/database')
+def show_all():
+    return render_template('database.html', students=students.query.all())
 
 
 if __name__ == "__main__":
