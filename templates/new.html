@@ -1,0 +1,28 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="container">
+<!DOCTYPE html>
+<html>
+   <body>
+   
+      <h3>Put in your informations</h3>
+      <hr/>
+      
+      {%- for category, message in get_flashed_messages(with_categories = true) %}
+         <div class = "alert alert-danger">
+            {{ message }}
+         </div>
+      {%- endfor %}
+      
+      <form action = "{{ request.path }}" method = "post">
+         <label for = "username">Username</label><br>
+         <input type = "text" name = "username" placeholder = "username" /><br>
+         <label for = "email">E-Mail</label><br>
+         <input type = "text" name = "email" placeholder = "email" /><br>
+         <input type = "submit" value = "Submit" />
+      </form>
+      
+   </body>
+</html>
+</div>
+{% endblock %}

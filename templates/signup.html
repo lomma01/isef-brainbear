@@ -1,4 +1,41 @@
 {% extends "layout.html" %}
 {% block content %}
-<div class="container">Registrierung</div>
+<div class="container">
+<!DOCTYPE html>
+<html lang = "en">
+   <head></head>
+   <body>
+      <h3>
+         <a>Sign Up</a>
+      </h3>
+      
+      <hr/>
+      {%- for message in get_flashed_messages() %}
+         {{ message }}
+      {%- endfor %}
+		
+      <h3><a href = "{{ url_for('new') }}">Create Account
+         </a></h3>
+      
+      <table>
+         <thead>
+            <tr>
+               <th>Username</th>
+               <th>Email</th>
+            </tr>
+         </thead>
+         
+         <tbody>
+            {% for student in students %}
+               <tr>
+                  <td>{{ student.username }}</td>
+                  <td>{{ student.email }}</td>
+               </tr>
+            {% endfor %}
+         </tbody>
+      </table>
+      
+   </body>
+</html>
+</div>
 {% endblock %}
