@@ -1,26 +1,11 @@
 from flask import Flask, render_template, flash, request, redirect, url_for
-from flask_sqlalchemy import SQLAlchemy
+import sqlite3 as sql
+
 
 app = Flask(__name__)
 
 # Secret key
 app.config['SECRET_KEY'] = "T5BPYMJD9GVKURSGTAXC"
-
-
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///students.sqlite3'
-
-db = SQLAlchemy(app)
-
-
-class students(db.Model):
-    id = db.Column('student_id', db.Integer, primary_key=True)
-    username = db.Column(db.String(15))
-    email = db.Column(db.String(50))
-
-
-def __init__(self, username, email):
-   self.username = username
-   self.email = email
 
 
 # Routes
@@ -56,24 +41,40 @@ def login():
 
 @app.route('/signup')
 def signup():
-    return render_template('signup.html', students=students.query.all())
+    return render_template('signup.html')
 
 
-@app.route('/new', methods=['GET', 'POST'])
-def new():
+@app.route('/addrec', methods=['GET', 'POST'])
+def addrec():
     if request.method == 'POST':
-        if not request.form['username'] or not request.form['email']:
-            flash('Please enter all the fields', 'error')
-        else:
-         student = students(username = request.form['username'], email = request.form['email'])
+        try:
+            unm = request.form['username']
+            email = request.form['email']
          
-         db.session.add(student)
-         db.session.commit()
-         
-         flash('Record was successfully added')
-         return redirect(url_for('signup'))
-    return render_template('new.html')
+            with sql.connect("database.db") as con:
+                cur = con.cursor()
+                cur.execute("INSERT INTO students (username,email) VALUES (?,?)",(unm,email) )
+            
+                con.commit()
+                msg = "Record successfully added"
+        except:
+            con.rollback()
+            msg = "error in insert operation"
+      
+        finally:
+            return render_template("added.html",msg = msg)
+            con.close()
 
+@app.route('/list')
+def list():
+    con = sql.connect("database.db")
+    con.row_factory = sql.Row
+    
+    cur = con.cursor()
+    cur.execute("select * from students")
+    
+    rows = cur.fetchall()
+    return render_template("list.html", rows = rows)
 
 @app.route('/about')
 def about():
@@ -81,5 +82,4 @@ def about():
 
 
 if __name__ == "__main__":
-    db.create_all()
     app.run(host='0.0.0.0', port=5000, debug=True)
