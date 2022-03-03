@@ -19,7 +19,8 @@
         <header class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-3 mb-4 border-bottom">
             Brainbear -- Quiz App
           <ul class="nav col-12 col-md-auto mb-2 justify-content-center mb-md-0">
-            <li><a href="/" class="nav-link px-2 link-dark">Home</a></li>
+            {% if userinfo %}
+            <li><a href="home" class="nav-link px-2 link-dark">Home</a></li>
             <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">Spielen</button>
               <ul class="dropdown-menu">
                 <li><a class="dropdown-item" href="single">Singleplayer</a></li>
@@ -28,10 +29,22 @@
             <li><a href="dashboard" class="nav-link px-2 link-dark">Dashboard</a></li>
             <li><a href="rank" class="nav-link px-2 link-dark">Highscore</a></li>
           </ul>
+          <div class="logged-in-box auth0-box logged-in">
+              <a href="/logout" class="btn btn-outline-primary me-2">Logout</a>
+            {% else %}
+            <li><a href="/" class="nav-link px-2 link-dark">Home</a></li>
+            <button class="btn dropdown-toggle disabled" type="button" data-bs-toggle="dropdown" aria-expanded="false">Spielen</button>
+              <ul class="dropdown-menu">
+                <li><a class="dropdown-item disabled" href="single">Singleplayer</a></li>
+                <li><a class="dropdown-item disabled" href="multi">Multiplayer</a></li>
+              </ul>
+            <li><a href="dashboard" class="nav-link px-2 link-dark disabled">Dashboard</a></li>
+            <li><a href="rank" class="nav-link px-2 link-dark disabled">Highscore</a></li>
+          </ul>
           <div class="col-md-3 text-end">
               <a href="login" class="btn btn-outline-primary me-2">Login</a>
-              <a href="signup" class="btn btn-primary">Sign-up</a>
           </div>
+            {% endif %}
         </header>
       </div>
     <div id="content">
@@ -44,7 +57,11 @@
       <footer class="d-flex flex-wrap justify-content-between align-items-center py-3 my-4 border-top">
         <p class="col-md-4 mb-0 text-muted">© 2022 Brainbear - Projekt Software Engineering</p>
         <ul class="nav col-md-4 justify-content-end">
+            {% if userinfo %}
           <li class="nav-item"><a href="about" class="nav-link px-2 text-muted">Über das Projekt</a></li>
+            {% else %}
+          <li class="nav-item"><a href="about2" class="nav-link px-2 text-muted">Über das Projekt</a></li>
+            {% endif %}
         </ul>
       </footer>
     </div>

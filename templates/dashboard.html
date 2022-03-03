@@ -1,4 +1,8 @@
 {% extends "layout.html" %}
 {% block content %}
-<div class="container">Dashboard</div>
+<div class="logged-in-box auth0-box logged-in">
+    Welcome {{userinfo['name']}}
+    <pre>{{userinfo_pretty}}</pre>
+    <a class="btn btn-primary btn-lg btn-logout btn-block" href="/logout">Logout</a>
+</div>
 {% endblock %}
