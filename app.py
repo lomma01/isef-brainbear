@@ -97,12 +97,13 @@ def rank():
 def addrec():
     if request.method == 'POST':
         try:
-            unm = request.form['username']
+            userinfo = session['profil']
+            username = userinfo['name']
             email = request.form['email']
          
             with sql.connect("database.db") as con:
                 cur = con.cursor()
-                cur.execute("INSERT INTO students (username,email) VALUES (?,?)",(unm,email) )
+                cur.execute("INSERT INTO students (username,email) VALUES (?,?)",(username,email) )
             
                 con.commit()
                 msg = "Record successfully added"
@@ -111,7 +112,10 @@ def addrec():
             msg = "error in insert operation"
       
         finally:
-            return render_template("added.html",msg = msg)
+            return render_template( "dashboard.html",
+                                    userinfo=session['profile'],
+                                    userinfo_pretty=json.dumps(session['jwt_payload'],
+                                    indent=4))
             con.close()
 
 @app.route('/list')
