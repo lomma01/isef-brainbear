@@ -5,18 +5,23 @@
 <html>
    <body>
    
-      <table border = 1>
+      <table border=3 rules=rows>
          <thead>
-            <td>Name</td>
-            <td>Nickname</td>
+            <td><th>Name</th></td>
+            <td><th>Nickname</th></td>
+            <td><th>ID</th></td>
+            <tbody>
+               {% for row in rows %}
+               <tr>
+                  <td>{{row["name"]}}</td>
+                  <td>{{row["nickname"]}}</td>		
+                  <td>{{row["user_id"]}}</td>	
+               </tr>
+            {% endfor %}
+
+            </tbody>
          </thead>
-         
-         {% for row in rows %}
-            <tr>
-               <td>{{row["name"]}}</td>
-               <td>{{row["nickname"]}}</td>	
-            </tr>
-         {% endfor %}
+      
       </table>
       
       <a href = "/">Go back to home page</a>
