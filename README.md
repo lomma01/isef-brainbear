@@ -16,3 +16,7 @@ Translated with https://www.DeepL.com/Translator (free version)
 
 #### Documentation Poetry:
 https://python-poetry.org/docs/cli/
+
+
+### Documentation Flask SQLAlchemy
+https://pythonbasics.org/flask-sqlalchemy/
