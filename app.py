@@ -94,12 +94,15 @@ def rank():
 
 @app.route('/list')
 def list():
+    #link sql database
     con = sql.connect("database.db")
     con.row_factory = sql.Row
     
+    #create a cursor
     cur = con.cursor()
     cur.execute("select * from students")
     
+    #rows to show data on /list page
     rows = cur.fetchall()
     return render_template("list.html", rows = rows)
 
