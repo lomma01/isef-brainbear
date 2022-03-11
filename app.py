@@ -135,7 +135,7 @@ def callback_handling():
     }
     
     #column names for sql database -> you also have to change it in the database.py!!!
-    username = userinfo['username']
+    username = userinfo['name']
     user_id = userinfo['sub']
     
     with sql.connect("database.db") as con:
