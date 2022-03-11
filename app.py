@@ -131,13 +131,13 @@ def callback_handling():
         'picture': userinfo['picture']
     }
     
-    name = userinfo['name']
-    nickname = userinfo['nickname']
+    #column names for sql database -> you also have to change it in the database.py!!!
+    username = userinfo['username']
     user_id = userinfo['sub']
     
     with sql.connect("database.db") as con:
         cur = con.cursor()
-        cur.execute("INSERT INTO students (name,nickname,user_id) VALUES (?,?,?)",(name,nickname,user_id) )
+        cur.execute("INSERT INTO students (username,user_id) VALUES (?,?)",(username,user_id) )
             
         con.commit()
         msg = "Record successfully added"
