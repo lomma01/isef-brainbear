@@ -7,14 +7,12 @@
    
       <table border=3 rules=rows>
          <thead>
-            <td><th>Name</th></td>
-            <td><th>Nickname</th></td>
+            <td><th>Username</th></td>
             <td><th>ID</th></td>
             <tbody>
                {% for row in rows %}
                <tr>
-                  <td>{{row["name"]}}</td>
-                  <td>{{row["nickname"]}}</td>		
+                  <td>{{row["username"]}}</td>		
                   <td>{{row["user_id"]}}</td>	
                </tr>
             {% endfor %}

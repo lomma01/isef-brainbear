@@ -94,12 +94,15 @@ def rank():
 
 @app.route('/list')
 def list():
+    #link sql database
     con = sql.connect("database.db")
     con.row_factory = sql.Row
     
+    #create a cursor
     cur = con.cursor()
     cur.execute("select * from students")
     
+    #rows to show data on /list page
     rows = cur.fetchall()
     return render_template("list.html", rows = rows)
 
@@ -131,13 +134,13 @@ def callback_handling():
         'picture': userinfo['picture']
     }
     
-    name = userinfo['name']
-    nickname = userinfo['nickname']
+    #column names for sql database -> you also have to change it in the database.py!!!
+    username = userinfo['name']
     user_id = userinfo['sub']
     
     with sql.connect("database.db") as con:
         cur = con.cursor()
-        cur.execute("INSERT INTO students (name,nickname,user_id) VALUES (?,?,?)",(name,nickname,user_id) )
+        cur.execute("INSERT INTO users (id,username) VALUES (?,?)",(user_id,username) )
             
         con.commit()
         msg = "Record successfully added"

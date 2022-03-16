@@ -1,8 +1,35 @@
 import sqlite3
 
 conn = sqlite3.connect('database.db')
-print ("Opened database successfully")
+#columns -> you also have to change it in @app.route('/callback')!!!
 
-conn.execute('CREATE TABLE students (id INTEGER NOT NULL PRIMARY KEY,name TEXT NOT NULL, nickname TEXT NOT NULL, user_id TEXT NOT NULL)')
-print ("Table created successfully")
+#you need foreign_keys = ON when you work with foreign keys in sqlite
+#especially when you insert values into the tables with foreign keys
+conn.execute("PRAGMA foreign_keys = ON")
+
+query_users_table = (''' CREATE TABLE IF NOT EXISTS users 
+                    (id         TEXT    PRIMARY KEY,
+                    username    TEXT    NOT NULL
+                    );''')
+
+conn.execute(query_users_table)
+
+query_modules_table = (''' CREATE TABLE IF NOT EXISTS modules 
+                    (id             TEXT    PRIMARY KEY,
+                    module_name     TEXT    NOT NULL
+                    );''')
+
+conn.execute(query_modules_table)
+
+query_highscore_table = (''' CREATE TABLE IF NOT EXISTS highscores 
+                    (id             TEXT    PRIMARY KEY,
+                    user_id         TEXT    NOT NULL,
+                    module_name     TEXT    NOT NULL,
+                    highscore       INT,
+                    FOREIGN KEY(user_id) REFERENCES users(id),
+                    FOREIGN KEY(module_name) REFERENCES modules(id)
+                    );''')
+
+conn.execute(query_highscore_table)
+
 conn.close()
