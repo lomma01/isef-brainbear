@@ -140,7 +140,7 @@ def callback_handling():
     
     with sql.connect("database.db") as con:
         cur = con.cursor()
-        cur.execute("INSERT INTO students (username,user_id) VALUES (?,?)",(username,user_id) )
+        cur.execute("INSERT INTO users (id,username) VALUES (?,?)",(user_id,username) )
             
         con.commit()
         msg = "Record successfully added"
