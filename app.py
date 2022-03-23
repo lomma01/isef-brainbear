@@ -1,14 +1,16 @@
-from functools import wraps
-import json
+from flask import flash, request
 from flask import Flask
 from flask import redirect
 from flask import render_template
 from flask import session
 from flask import url_for
 from authlib.integrations.flask_client import OAuth
-from six.moves.urllib.parse import urlencode
 from flask_wtf.csrf import CSRFProtect
+from urllib.parse import urlencode  # Abweichung von OAuth-Quickstarts
+from functools import wraps
 import auth
+import json
+import sqlite3 as sql
 
 app = Flask(__name__)
 csrf = CSRFProtect()
@@ -94,6 +96,19 @@ def rank():
                            userinfo_pretty=json.dumps(session['jwt_payload'],
                                                       indent=4))
 
+@app.route('/list')
+def list():
+    #link sql database
+    con = sql.connect("database.db")
+    con.row_factory = sql.Row
+    
+    #create a cursor
+    cur = con.cursor()
+    cur.execute("select * from users")
+    
+    #rows to show data on /list page
+    rows = cur.fetchall()
+    return render_template("list.html", rows = rows)
 
 @app.route('/about', methods=['GET'])
 def about():
@@ -122,7 +137,21 @@ def callback_handling():
         'name': userinfo['name'],
         'picture': userinfo['picture']
     }
-    return redirect('/dashboard')
+    
+    #column names for sql database -> you also have to change it in the database.py!!!
+    username = userinfo['name']
+    user_id = userinfo['sub']
+    #for inital entries we use is_student
+    role = 'is_student'
+    
+    with sql.connect("database.db") as con:
+        cur = con.cursor()
+        cur.execute("INSERT INTO users (id,username,role) VALUES (?,?,?)",(user_id,username,role) )
+            
+        con.commit()
+        msg = "Record successfully added"
+        #con.close()
+        return redirect('/dashboard')
 
 
 @app.route('/login', methods=['GET'])
