@@ -11,7 +11,7 @@ conn.execute("PRAGMA foreign_keys = ON")
 query_users_table = (''' CREATE TABLE IF NOT EXISTS users 
                     (id         TEXT    PRIMARY KEY,
                     username    TEXT    NOT NULL,
-                    role        TEXT    NOT NULL,
+                    role        TEXT    NOT NULL
                     );''')
 
 conn.execute(query_users_table)
