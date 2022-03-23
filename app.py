@@ -100,7 +100,7 @@ def list():
     
     #create a cursor
     cur = con.cursor()
-    cur.execute("select * from students")
+    cur.execute("select * from users")
     
     #rows to show data on /list page
     rows = cur.fetchall()
@@ -137,10 +137,12 @@ def callback_handling():
     #column names for sql database -> you also have to change it in the database.py!!!
     username = userinfo['name']
     user_id = userinfo['sub']
+    #for inital entries we use is_student
+    role = 'is_student'
     
     with sql.connect("database.db") as con:
         cur = con.cursor()
-        cur.execute("INSERT INTO users (id,username) VALUES (?,?)",(user_id,username) )
+        cur.execute("INSERT INTO users (id,username,role) VALUES (?,?,?)",(user_id,username,role) )
             
         con.commit()
         msg = "Record successfully added"

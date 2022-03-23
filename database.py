@@ -7,9 +7,11 @@ conn = sqlite3.connect('database.db')
 #especially when you insert values into the tables with foreign keys
 conn.execute("PRAGMA foreign_keys = ON")
 
+#role = is_admin, is_dozent, is_student
 query_users_table = (''' CREATE TABLE IF NOT EXISTS users 
                     (id         TEXT    PRIMARY KEY,
-                    username    TEXT    NOT NULL
+                    username    TEXT    NOT NULL,
+                    role        TEXT    NOT NULL
                     );''')
 
 conn.execute(query_users_table)
