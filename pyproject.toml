@@ -11,6 +11,7 @@ python-dotenv = "^0.19.2"
 requests = "^2.27.1"
 Authlib = "^0.15.5"
 six = "^1.16.0"
+csrf = "^0.1b1"
 
 [tool.poetry.dev-dependencies]
 
