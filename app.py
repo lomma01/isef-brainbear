@@ -145,7 +145,6 @@ def callback_handling():
         cur.execute("INSERT INTO users (id,username,role) VALUES (?,?,?)",(user_id,username,role) )
             
         con.commit()
-        msg = "Record successfully added"
         #con.close()
         return redirect('/dashboard')
 
