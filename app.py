@@ -5,6 +5,7 @@ from flask import render_template
 from flask import session
 from flask import url_for
 from authlib.integrations.flask_client import OAuth
+from flask_wtf.csrf import CSRFProtect
 from urllib.parse import urlencode  # Abweichung von OAuth-Quickstarts
 from functools import wraps
 import auth
@@ -12,6 +13,9 @@ import json
 import sqlite3 as sql
 
 app = Flask(__name__)
+csrf = CSRFProtect()
+csrf.init_app(app)
+
 
 # Secret key
 app.config['SECRET_KEY'] = "T5BPYMJD9GVKURSGTAXC"
@@ -44,12 +48,12 @@ def requires_auth(f):
 
 
 # Routes
-@app.route('/')
+@app.route('/', methods=['GET'])
 def index():
     return render_template('index.html')
 
 
-@app.route('/home')
+@app.route('/home', methods=['GET'])
 def home():
     return render_template('home.html',
                            userinfo=session['profile'],
@@ -57,7 +61,7 @@ def home():
                                                       indent=4))
 
 
-@app.route('/single')
+@app.route('/single', methods=['GET'])
 @requires_auth
 def single():
     return render_template('single.html',
@@ -66,7 +70,7 @@ def single():
                                                       indent=4))
 
 
-@app.route('/multi')
+@app.route('/multi', methods=['GET'])
 @requires_auth
 def multi():
     return render_template('multi.html',
@@ -75,7 +79,7 @@ def multi():
                                                       indent=4))
 
 
-@app.route('/dashboard')
+@app.route('/dashboard', methods=['GET'])
 @requires_auth
 def dashboard():
     return render_template('dashboard.html',
@@ -84,7 +88,7 @@ def dashboard():
                                                       indent=4))
 
 
-@app.route('/rank')
+@app.route('/rank', methods=['GET'])
 @requires_auth
 def rank():
     return render_template('rank.html',
@@ -106,7 +110,7 @@ def list():
     rows = cur.fetchall()
     return render_template("list.html", rows = rows)
 
-@app.route('/about')
+@app.route('/about', methods=['GET'])
 def about():
     return render_template('about.html',
                            userinfo=session['profile'],
@@ -114,12 +118,12 @@ def about():
                                                       indent=4))
 
 
-@app.route('/about2')
+@app.route('/about2', methods=['GET'])
 def about2():
     return render_template('about.html')
 
 
-@app.route('/callback')
+@app.route('/callback', methods=['GET'])
 def callback_handling():
     # Handles response from token endpoint
     auth0.authorize_access_token()
@@ -150,12 +154,12 @@ def callback_handling():
         return redirect('/dashboard')
 
 
-@app.route('/login')
+@app.route('/login', methods=['GET'])
 def login():
     return auth0.authorize_redirect(redirect_uri=auth.redirect_uri)
 
 
-@app.route('/logout')
+@app.route('/logout', methods=['GET'])
 def logout():
     # Clear session stored data
     session.clear()

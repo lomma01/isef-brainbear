@@ -81,6 +81,14 @@ ssh = ["bcrypt (>=3.1.5)"]
 test = ["pytest (>=6.2.0)", "pytest-cov", "pytest-subtests", "pytest-xdist", "pretend", "iso8601", "pytz", "hypothesis (>=1.11.4,!=3.79.2)"]
 
 [[package]]
+name = "csrf"
+version = "0.1b1"
+description = "simply generate & validate BREACH-resistant CSRF tokens"
+category = "main"
+optional = false
+python-versions = "*"
+
+[[package]]
 name = "flask"
 version = "2.0.3"
 description = "A simple framework for building complex web applications."
@@ -208,7 +216,7 @@ watchdog = ["watchdog"]
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8"
-content-hash = "3519859759f87cc0923d7953f01028527caed84c51a1ca2245125d94c1948990"
+content-hash = "0260aace2264475121e0c5384b7381139819ee96b48566b5c1d7b2e698a365d7"
 
 [metadata.files]
 authlib = [
@@ -304,6 +312,10 @@ cryptography = [
     {file = "cryptography-36.0.2-pp38-pypy38_pp73-manylinux_2_24_x86_64.whl", hash = "sha256:1f64a62b3b75e4005df19d3b5235abd43fa6358d5516cfc43d87aeba8d08dd51"},
     {file = "cryptography-36.0.2-pp38-pypy38_pp73-win_amd64.whl", hash = "sha256:e167b6b710c7f7bc54e67ef593f8731e1f45aa35f8a8a7b72d6e42ec76afd4b3"},
     {file = "cryptography-36.0.2.tar.gz", hash = "sha256:70f8f4f7bb2ac9f340655cbac89d68c527af5bb4387522a8413e841e3e6628c9"},
+]
+csrf = [
+    {file = "csrf-0.1b1-py3-none-any.whl", hash = "sha256:87d34ec729dd321e80e6dcbad90537df112089204fcf9e488a8bbd1301831841"},
+    {file = "csrf-0.1b1.tar.gz", hash = "sha256:b44eca40f74a46d9f5846c78a3f2488123d051346e09e3133af0029bcaf33a66"},
 ]
 flask = [
     {file = "Flask-2.0.3-py3-none-any.whl", hash = "sha256:59da8a3170004800a2837844bfa84d49b022550616070f7cb1a659682b2e7c9f"},
