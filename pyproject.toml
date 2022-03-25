@@ -12,6 +12,7 @@ requests = "^2.27.1"
 Authlib = "^0.15.5"
 six = "^1.16.0"
 Flask-WTF = "^1.0.0"
+csrf = "^0.1b1"
 
 [tool.poetry.dev-dependencies]
 
