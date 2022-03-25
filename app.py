@@ -154,12 +154,12 @@ def not_student_only(f):
 
 
 # Routes
-@app.route('/', methods=["GET"])
+@app.route('/', methods=['GET'])
 def index():
     return render_template('index.html')
 
 
-@app.route('/home', methods=["GET"])
+@app.route('/home', methods=['GET'])
 @requires_auth
 def home():
     return render_template('home.html',
@@ -168,7 +168,7 @@ def home():
                                                       indent=4))
 
 
-@app.route('/single', methods=["GET"])
+@app.route('/single', methods=['GET'])
 @requires_auth
 @student_only
 def single():
@@ -178,7 +178,7 @@ def single():
                                                       indent=4))
 
 
-@app.route('/multi', methods=["GET"])
+@app.route('/multi', methods=['GET'])
 @requires_auth
 @student_only
 def multi():
@@ -188,7 +188,7 @@ def multi():
                                                       indent=4))
 
 
-@app.route('/dashboard', methods=["GET"])
+@app.route('/dashboard', methods=['GET'])
 @requires_auth
 def dashboard():
     return render_template('dashboard.html',
@@ -197,7 +197,7 @@ def dashboard():
                                                       indent=4))
 
 
-@app.route('/rank', methods=["GET"])
+@app.route('/rank', methods=['GET'])
 @requires_auth
 @student_only
 def rank():
@@ -207,7 +207,7 @@ def rank():
                                                       indent=4))
 
 
-@app.route('/list', methods=["GET"])
+@app.route('/list', methods=['GET'])
 @requires_auth
 @admin_only
 def list():
@@ -224,7 +224,7 @@ def list():
     return render_template("list.html", rows=rows)
 
 
-@app.route('/about', methods=["GET"])
+@app.route('/about', methods=['GET'])
 @requires_auth
 def about():
     return render_template('about.html',
@@ -233,17 +233,17 @@ def about():
                                                       indent=4))
 
 
-@app.route('/about2', methods=["GET"])
+@app.route('/about2', methods=['GET'])
 def about2():
     return render_template('about.html')
 
 
-@app.route('/error', methods=["GET"])
+@app.route('/error', methods=['GET'])
 def error():
     return render_template('error.html')
 
 
-@app.route('/callback', methods=["GET"])
+@app.route('/callback', methods=['GET'])
 def callback_handling():
     # Handles response from token endpoint
     auth0.authorize_access_token()
@@ -273,12 +273,12 @@ def callback_handling():
         return redirect('/dashboard')
 
 
-@app.route('/login', methods=["GET"])
+@app.route('/login', methods=['GET'])
 def login():
     return auth0.authorize_redirect(redirect_uri=auth.redirect_uri)
 
 
-@app.route('/logout', methods=["GET"])
+@app.route('/logout', methods=['GET'])
 def logout():
     # Clear session stored data
     session.clear()
