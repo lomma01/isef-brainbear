@@ -5,16 +5,18 @@
 <html>
    <body>
    
-      <table border=3 rules=rows>
+      <table border=3 rules=rows style="width:50%">
          <thead>
-            <td><th>Username</th></td>
-            <td><th>ID</th></td>
-            <tbody>
-               {% for row in rows %}
-               <tr>
-                  <td>{{row["username"]}}</td>		
-                  <td>{{row["user_id"]}}</td>	
-               </tr>
+             <th>Username</th>
+             <th>ID</th>
+             <th>Role</th>
+          <tbody>
+              {% for row in rows %}
+              <tr>
+                  <td>{{row["username"]}}</td>
+                  <td>{{row["id"]}}</td>
+                  <td>{{row["role"]}}</td>
+              </tr>
             {% endfor %}
 
             </tbody>

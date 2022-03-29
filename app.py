@@ -1,4 +1,3 @@
-from flask import flash, request
 from flask import Flask
 from flask import redirect
 from flask import render_template
@@ -34,17 +33,125 @@ auth0 = oauth.register(
     },
 )
 
+# put your user_id here
+ADMINS = ["github|59766382"]
+
 
 # Decorator
 def requires_auth(f):
     @wraps(f)
     def decorated(*args, **kwargs):
         if 'profile' not in session:
-            # Redirect to Login page here
-            return redirect('/')
+            return redirect(url_for("error"))
         return f(*args, **kwargs)
 
     return decorated
+
+
+# Helper Functions
+# Checks if user_id from session is present in userStore from db and member of specific role
+def is_admin(f):
+    con = sql.connect('database.db')
+    con.row_factory = sql.Row
+    cur = con.cursor()
+    userStore = cur.execute("SELECT * FROM users;").fetchall()
+    for i in userStore:
+        if session["profile"]["user_id"] in i and session["profile"][
+                "user_id"] in ADMINS:
+            return True
+        else:
+            return False
+
+
+def is_dozent(f):
+    con = sql.connect('database.db')
+    con.row_factory = sql.Row
+    cur = con.cursor()
+    userStore = cur.execute("SELECT * FROM users;").fetchall()
+    for i in userStore:
+        if session["profile"]["user_id"] in i and "is_dozent" in i:
+            return True
+        else:
+            return False
+
+
+def is_student(f):
+    con = sql.connect('database.db')
+    con.row_factory = sql.Row
+    cur = con.cursor()
+    userStore = cur.execute("SELECT * FROM users;").fetchall()
+    for i in userStore:
+        if session["profile"]["user_id"] in i and "is_student" in i:
+            return True
+        else:
+            return False
+
+
+# Authorization decorators
+def admin_only(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+
+        if not is_admin(f):
+            return redirect(url_for("error"))
+        return f(*args, **kwargs)
+
+    return decorated_function
+
+
+def not_admin_only(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+
+        if is_admin(f):
+            return redirect(url_for("error"))
+        return f(*args, **kwargs)
+
+    return decorated_function
+
+
+def dozent_only(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+
+        if not is_dozent(f):
+            return redirect(url_for("error"))
+        return f(*args, **kwargs)
+
+    return decorated_function
+
+
+def not_dozent_only(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+
+        if is_dozent(f):
+            return redirect(url_for("error"))
+        return f(*args, **kwargs)
+
+    return decorated_function
+
+
+def student_only(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+
+        if not is_student(f):
+            return redirect(url_for("error"))
+        return f(*args, **kwargs)
+
+    return decorated_function
+
+
+def not_student_only(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+
+        if is_student(f):
+            return redirect(url_for("error"))
+        return f(*args, **kwargs)
+
+    return decorated_function
 
 
 # Routes
@@ -54,6 +161,7 @@ def index():
 
 
 @app.route('/home', methods=['GET'])
+@requires_auth
 def home():
     return render_template('home.html',
                            userinfo=session['profile'],
@@ -63,6 +171,7 @@ def home():
 
 @app.route('/single', methods=['GET'])
 @requires_auth
+@student_only
 def single():
     return render_template('single.html',
                            userinfo=session['profile'],
@@ -72,6 +181,7 @@ def single():
 
 @app.route('/multi', methods=['GET'])
 @requires_auth
+@student_only
 def multi():
     return render_template('multi.html',
                            userinfo=session['profile'],
@@ -90,27 +200,33 @@ def dashboard():
 
 @app.route('/rank', methods=['GET'])
 @requires_auth
+@student_only
 def rank():
     return render_template('rank.html',
                            userinfo=session['profile'],
                            userinfo_pretty=json.dumps(session['jwt_payload'],
                                                       indent=4))
 
-@app.route('/list')
+
+@app.route('/list', methods=['GET'])
+@requires_auth
+@admin_only
 def list():
-    #link sql database
+    # link sql database
     con = sql.connect("database.db")
     con.row_factory = sql.Row
-    
-    #create a cursor
+
+    # create a cursor
     cur = con.cursor()
     cur.execute("select * from users")
-    
-    #rows to show data on /list page
+
+    # rows to show data on /list page
     rows = cur.fetchall()
-    return render_template("list.html", rows = rows)
+    return render_template("list.html", rows=rows)
+
 
 @app.route('/about', methods=['GET'])
+@requires_auth
 def about():
     return render_template('about.html',
                            userinfo=session['profile'],
@@ -121,6 +237,11 @@ def about():
 @app.route('/about2', methods=['GET'])
 def about2():
     return render_template('about.html')
+
+
+@app.route('/error', methods=['GET'])
+def error():
+    return render_template('error.html')
 
 
 @app.route('/callback', methods=['GET'])
@@ -137,20 +258,19 @@ def callback_handling():
         'name': userinfo['name'],
         'picture': userinfo['picture']
     }
-    
-    #column names for sql database -> you also have to change it in the database.py!!!
+
+    # column names for sql database -> you also have to change it in the database.py!!!
     username = userinfo['name']
     user_id = userinfo['sub']
-    #for inital entries we use is_student
+    # for inital entries we use is_student
     role = 'is_student'
-    
+
     with sql.connect("database.db") as con:
         cur = con.cursor()
-        cur.execute("INSERT INTO users (id,username,role) VALUES (?,?,?)",(user_id,username,role) )
-            
+        cur.execute("INSERT INTO users (id,username,role) VALUES (?,?,?)",
+                    (user_id, username, role))
+
         con.commit()
-        msg = "Record successfully added"
-        #con.close()
         return redirect('/dashboard')
 
 
