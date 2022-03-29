@@ -146,7 +146,7 @@ def callback_handling():
     
     with sql.connect("database.db") as connector_to_database:
         cursor_for_database = connector_to_database.cursor()
-        cursor_for_database.execute("INSERT INTO users (id,username,role) VALUES (?,?,?)",(user_id,username,role) )
+        cursor_for_database.execute("INSERT OR IGNORE INTO users (id,username,role) VALUES (?,?,?)",(user_id,username,role) )
         connector_to_database.commit()
         
         return redirect('/dashboard')
