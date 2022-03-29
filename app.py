@@ -15,6 +15,7 @@ app = Flask(__name__)
 csrf = CSRFProtect()
 csrf.init_app(app)
 
+
 # Secret key
 app.config['SECRET_KEY'] = "T5BPYMJD9GVKURSGTAXC"
 
