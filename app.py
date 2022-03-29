@@ -99,15 +99,15 @@ def rank():
 @app.route('/list')
 def list():
     #link sql database
-    con = sql.connect("database.db")
-    con.row_factory = sql.Row
+    connector_to_database = sql.connect("database.db")
+    connector_to_database.row_factory = sql.Row
     
     #create a cursor
-    cur = con.cursor()
-    cur.execute("select * from users")
+    cursor_for_database = connector_to_database.cursor()
+    cursor_for_database.execute("select * from users")
     
     #rows to show data on /list page
-    rows = cur.fetchall()
+    rows = cursor_for_database.fetchall()
     return render_template("list.html", rows = rows)
 
 @app.route('/about', methods=['GET'])
@@ -144,13 +144,11 @@ def callback_handling():
     #for inital entries we use is_student
     role = 'is_student'
     
-    with sql.connect("database.db") as con:
-        cur = con.cursor()
-        cur.execute("INSERT INTO users (id,username,role) VALUES (?,?,?)",(user_id,username,role) )
-            
-        con.commit()
-        msg = "Record successfully added"
-        #con.close()
+    with sql.connect("database.db") as connector_to_database:
+        cursor_for_database = connector_to_database.cursor()
+        cursor_for_database.execute("INSERT INTO users (id,username,role) VALUES (?,?,?)",(user_id,username,role) )
+        connector_to_database.commit()
+        
         return redirect('/dashboard')
 
 
