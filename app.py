@@ -267,10 +267,10 @@ def callback_handling():
 
     with sql.connect("database.db") as con:
         cur = con.cursor()
-        cur.execute("INSERT INTO users (id,username,role) VALUES (?,?,?)",
+        cur.execute("INSERT OR IGNORE INTO users (id,username,role) VALUES (?,?,?)",
                     (user_id, username, role))
-
         con.commit()
+        
         return redirect('/dashboard')
 
 
