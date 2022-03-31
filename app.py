@@ -49,13 +49,13 @@ def requires_auth(f):
 
 
 # Helper Functions
-# Checks if user_id from session is present in userStore from db and member of specific role
+# Checks if user_id from session is present in userstore from db and member of specific role
 def is_admin(f):
     con = sql.connect('database.db')
     con.row_factory = sql.Row
     cur = con.cursor()
-    userStore = cur.execute("SELECT * FROM users;").fetchall()
-    for i in userStore:
+    userstore = cur.execute("SELECT * FROM users;").fetchall()
+    for i in userstore:
         if session["profile"]["user_id"] in i and session["profile"][
                 "user_id"] in ADMINS:
             return True
@@ -67,8 +67,8 @@ def is_dozent(f):
     con = sql.connect('database.db')
     con.row_factory = sql.Row
     cur = con.cursor()
-    userStore = cur.execute("SELECT * FROM users;").fetchall()
-    for i in userStore:
+    userstore = cur.execute("SELECT * FROM users;").fetchall()
+    for i in userstore:
         if session["profile"]["user_id"] in i and "is_dozent" in i:
             return True
         else:
@@ -79,8 +79,8 @@ def is_student(f):
     con = sql.connect('database.db')
     con.row_factory = sql.Row
     cur = con.cursor()
-    userStore = cur.execute("SELECT * FROM users;").fetchall()
-    for i in userStore:
+    userstore = cur.execute("SELECT * FROM users;").fetchall()
+    for i in userstore:
         if session["profile"]["user_id"] in i and "is_student" in i:
             return True
         else:
