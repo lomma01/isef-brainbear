@@ -21,7 +21,7 @@ def requires_auth(f):
 
 # Helper Functions
 # Checks if user_id from session is present in userstore from db and member of specific role
-def is_admin(f):
+def is_admin():
     con = sql.connect('database.db')
     con.row_factory = sql.Row
     cur = con.cursor()
@@ -34,7 +34,7 @@ def is_admin(f):
             return False
 
 
-def is_dozent(f):
+def is_dozent():
     con = sql.connect('database.db')
     con.row_factory = sql.Row
     cur = con.cursor()
@@ -46,7 +46,7 @@ def is_dozent(f):
             return False
 
 
-def is_student(f):
+def is_student():
     con = sql.connect('database.db')
     con.row_factory = sql.Row
     cur = con.cursor()
@@ -63,7 +63,7 @@ def admin_only(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
 
-        if not is_admin(f):
+        if not is_admin():
             return redirect(url_for("error"))
         return f(*args, **kwargs)
 
@@ -74,7 +74,7 @@ def not_admin_only(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
 
-        if is_admin(f):
+        if is_admin():
             return redirect(url_for("error"))
         return f(*args, **kwargs)
 
@@ -85,7 +85,7 @@ def dozent_only(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
 
-        if not is_dozent(f):
+        if not is_dozent():
             return redirect(url_for("error"))
         return f(*args, **kwargs)
 
@@ -96,7 +96,7 @@ def not_dozent_only(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
 
-        if is_dozent(f):
+        if is_dozent():
             return redirect(url_for("error"))
         return f(*args, **kwargs)
 
@@ -107,7 +107,7 @@ def student_only(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
 
-        if not is_student(f):
+        if not is_student():
             return redirect(url_for("error"))
         return f(*args, **kwargs)
 
@@ -118,7 +118,7 @@ def not_student_only(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
 
-        if is_student(f):
+        if is_student():
             return redirect(url_for("error"))
         return f(*args, **kwargs)
 
