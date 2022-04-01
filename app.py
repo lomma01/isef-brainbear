@@ -71,15 +71,20 @@ def multi():
 @app.route('/dashboard', methods=['GET'])
 @decorators.requires_auth
 def dashboard():
+    admin = decorators.is_admin()
+    dozent = decorators.is_dozent()
+    student = decorators.is_student()
     return render_template('dashboard.html',
                            userinfo=session['profile'],
                            userinfo_pretty=json.dumps(session['jwt_payload'],
-                                                      indent=4))
+                                                      indent=4),
+                           admin=admin,
+                           dozent=dozent,
+                           student=student)
 
 
 @app.route('/rank', methods=['GET'])
 @decorators.requires_auth
-@decorators.student_only
 def rank():
     return render_template('rank.html',
                            userinfo=session['profile'],
@@ -101,7 +106,11 @@ def list():
 
     # rows to show data on /list page
     rows = cur.fetchall()
-    return render_template("list.html", rows=rows)
+    return render_template("list.html",
+                           rows=rows,
+                           userinfo=session['profile'],
+                           userinfo_pretty=json.dumps(session['jwt_payload'],
+                                                      indent=4))
 
 
 @app.route('/about', methods=['GET'])

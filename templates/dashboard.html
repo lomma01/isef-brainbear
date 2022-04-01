@@ -1,8 +1,21 @@
 {% extends "layout.html" %}
 {% block content %}
-<div class="logged-in-box auth0-box logged-in">
-    Welcome {{userinfo['name']}}
-    <pre>{{userinfo_pretty}}</pre>
-    <a class="btn btn-primary btn-lg btn-logout btn-block" href="/logout">Logout</a>
+<div class="container">
+    {% if student %}
+    <!-- STUDENT -->
+    <a href="#" class="nav-link">Fragen verwalten</a>
+    
+    {% endif %}
+    {% if dozent %}
+    <!-- DOZENT -->
+    <a href="#" class="nav-link">Fragen verwalten</a>
+    
+    {% endif %}
+    {% if admin %}
+    <!-- ADMIN -->
+    Admin Panel: </br>
+    <a href="list" class="nav-link">Userverwaltung</a>
+    <a href="#" class="nav-link">Module verwalten</a>
+    {% endif %}
 </div>
 {% endblock %}

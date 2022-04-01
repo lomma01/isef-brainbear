@@ -1,32 +1,23 @@
 {% extends "layout.html" %}
 {% block content %}
 <div class="container">
-<!doctype html>
-<html>
-   <body>
-   
-      <table border=3 rules=rows style="width:50%">
-         <thead>
-             <th>Username</th>
-             <th>ID</th>
-             <th>Role</th>
-          <tbody>
-              {% for row in rows %}
-              <tr>
-                  <td>{{row["username"]}}</td>
-                  <td>{{row["id"]}}</td>
-                  <td>{{row["role"]}}</td>
-              </tr>
-            {% endfor %}
-
+    <table border=3 rules=rows style="width:100%" aria-describedby="overview users">
+        <caption>Tabelle: Übersicht User, Rollen und IDs</caption>
+        <thead>
+            <th>Username</th>
+            <th>ID</th>
+            <th>Rolle</th>
+            <tbody>
+                {% for row in rows %}
+                <tr>
+                    <td>{{row["username"]}}</td>
+                    <td>{{row["id"]}}</td>
+                    <td>{{row["role"]}}</td>
+                </tr>
+                {% endfor %}
             </tbody>
-         </thead>
-      
-      </table>
-      
-      <a href = "/">Go back to home page</a>
-      
-   </body>
-</html>
+        </thead>
+    </table>
+    <a href="dashboard" class="nav-link px-2 text-muted">Zurück zum Dashboard</a>
 </div>
 {% endblock %}
