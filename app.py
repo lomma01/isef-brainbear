@@ -91,6 +91,15 @@ def add_moduls():
                            userinfo_pretty=json.dumps(session['jwt_payload'],
                                                       indent=4))
 
+#Route for add Questions (hp)
+@app.route('/add_questions', methods=['GET'])
+@decorators.requires_auth
+def add_questions():
+    return render_template('add_questions.html',
+                           userinfo=session['profile'],
+                           userinfo_pretty=json.dumps(session['jwt_payload'],
+                                                      indent=4))
+
 @app.route('/rank', methods=['GET'])
 @decorators.requires_auth
 def rank():
