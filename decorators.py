@@ -5,7 +5,7 @@ from functools import wraps
 import sqlite3 as sql
 
 # put your user_id here
-ADMINS = ["github|59766382", "github|37813763"]
+ADMINS = ["github|59766382", "github|37813763", "github|59029239"]
 
 
 # Decorator
