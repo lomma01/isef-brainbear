@@ -10,6 +10,7 @@ import auth
 import json
 import sqlite3 as sql
 import decorators
+import database
 
 app = Flask(__name__)
 csrf = CSRFProtect()
@@ -96,16 +97,8 @@ def rank():
 @decorators.requires_auth
 @decorators.admin_only
 def list():
-    # link sql database
-    con = sql.connect("database.db")
-    con.row_factory = sql.Row
-
-    # create a cursor
-    cur = con.cursor()
-    cur.execute("select * from users")
-
     # rows to show data on /list page
-    rows = cur.fetchall()
+    rows = database.DatabaseManager().fetch_all_user_rows()
     return render_template("list.html",
                            rows=rows,
                            userinfo=session['profile'],
