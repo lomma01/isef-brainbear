@@ -17,7 +17,11 @@
     <!-- Header, Link: https://getbootstrap.com/docs/5.1/examples/headers/ -->
     <div class="container">
         <header class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-3 mb-4 border-bottom">
-          <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-dark text-decoration-none">
+            {% if userinfo %}
+            <a href="/home" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-dark text-decoration-none">
+            {% else %}
+            <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-dark text-decoration-none">
+            {% endif %}
             <!--svg class="bi me-2" width="40" height="32"><use xlink:href="#bootstrap"></use></!--svg-->
             <img src="/static/Animal_Bear_1 copy 21.png" width="60" height="60">
             <span class="fs-5">Brainbear -- Quiz App</span>
