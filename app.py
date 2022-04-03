@@ -82,6 +82,14 @@ def dashboard():
                            dozent=dozent,
                            student=student)
 
+#Route for add Moduls (hp)
+@app.route('/add_moduls', methods=['GET'])
+@decorators.requires_auth
+def add_moduls():
+    return render_template('add_moduls.html',
+                           userinfo=session['profile'],
+                           userinfo_pretty=json.dumps(session['jwt_payload'],
+                                                      indent=4))
 
 @app.route('/rank', methods=['GET'])
 @decorators.requires_auth

@@ -1,0 +1,18 @@
+{% extends "layout.html" %}
+{% block content %}
+
+<div class="col-md-7 col-lg-8">
+    <!--Hier ist die Methode und die ID eventuell muss die für das Backend angepasst werden-->
+    <form method="post" id="modul">
+        <label class="form-label" for="kurs-id">Kurskürzel:</label>
+        <input type="text" class="form-control" id="kurs-id" placeholder="example01">
+        <label class="form-label" for="designation">Bezeichnung des Kurses:</label>
+        <input type="text" class="form-control" id="designation" placeholder="example cours for IT">
+        <label class="form-label" for="chapter">Kapitel:</label>
+        <input type="text" class="form-control" id="chapter" placeholder="2.4 example-chapter" disabled>
+        <hr class="my-4">
+        <button class="w-1000 btn btn-primary btn-lg" type="submit">Kapitel hinzufügen</button>
+    </form>
+</div>
+
+{% endblock %}
