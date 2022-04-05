@@ -6,8 +6,7 @@ import sqlite3 as sql
 from wtforms import Form, StringField
 
 # put your user_id here
-ADMINS = ["github|59766382", "github|37813763"]
-
+ADMINS = ["github|59766382", "github|37813763", "github|95571837", "github|59029239"]
 
 # Decorator
 def requires_auth(f):

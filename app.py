@@ -11,6 +11,7 @@ import json
 import sqlite3 as sql
 import decorators
 from flask import request
+import database
 
 app = Flask(__name__)
 csrf = CSRFProtect()
@@ -83,6 +84,23 @@ def dashboard():
                            dozent=dozent,
                            student=student)
 
+#Route for add Moduls (hp)
+@app.route('/add_modules', methods=['GET'])
+@decorators.requires_auth
+def add_modules():
+    return render_template('add_modules.html',
+                           userinfo=session['profile'],
+                           userinfo_pretty=json.dumps(session['jwt_payload'],
+                                                      indent=4))
+
+#Route for add Questions (hp)
+@app.route('/add_questions', methods=['GET'])
+@decorators.requires_auth
+def add_questions():
+    return render_template('add_questions.html',
+                           userinfo=session['profile'],
+                           userinfo_pretty=json.dumps(session['jwt_payload'],
+                                                      indent=4))
 
 @app.route('/rank', methods=['GET'])
 @decorators.requires_auth
@@ -97,24 +115,14 @@ def rank():
 @decorators.requires_auth
 @decorators.admin_only
 def list():
-    # link sql database
-    con = sql.connect("database.db")
-    con.row_factory = sql.Row
-
-    # create a cursor
-    cur = con.cursor()
-    cur.execute("select * from users")
-
-    # rows to show data on /list page
-    rows = cur.fetchall()
-
     # UPDATE roles
     roleupdate = decorators.UpdateRoles(request.form)
     if request.method == 'POST' and roleupdate.validate():
         id = roleupdate.id.data
         role = roleupdate.role.data
-        # SQL Statement UPDATE roles
+        # SQL Statement UPDATE users role
     
+    rows = database.DatabaseManager().fetch_all_user_rows()
     return render_template("list.html",
                            rows=rows,
                            roleupdate=roleupdate,

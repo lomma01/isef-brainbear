@@ -1,37 +1,64 @@
-import sqlite3
+import sqlite3 as sql
+from sqlite3 import Error
 
-conn = sqlite3.connect('database.db')
-#columns -> you also have to change it in @app.route('/callback')!!!
+class DatabaseManager(object):
+    def __init__(self):
+        self.conn = sql.connect('database.db')
+        self.conn.execute('pragma foreign_keys = on')
+        self.conn.commit()
+        self.cur = self.conn.cursor()
 
-#you need foreign_keys = ON when you work with foreign keys in sqlite
-#especially when you insert values into the tables with foreign keys
-conn.execute("PRAGMA foreign_keys = ON")
+    def query(self, query):
+        self.cur.execute(query)
+        self.conn.commit()
+        return self.cur
+    
+    def fetch_all_user_rows(self):
 
-#role = is_admin, is_dozent, is_student
-query_users_table = (''' CREATE TABLE IF NOT EXISTS users 
-                    (id         TEXT    PRIMARY KEY,
-                    username    TEXT    NOT NULL,
-                    role        TEXT    NOT NULL
-                    );''')
+        with self.conn:
+            self.conn.row_factory = sql.Row
+            curs = self.conn.cursor()
+            curs.execute("SELECT * FROM users")
+            rows = curs.fetchall()
+            return rows
 
-conn.execute(query_users_table)
 
-query_modules_table = (''' CREATE TABLE IF NOT EXISTS modules 
-                    (id             TEXT    PRIMARY KEY,
-                    module_name     TEXT    NOT NULL
-                    );''')
+def database_query(query):
+    connect_to_sql_db = sql.connect('database.db')
+    connect_to_sql_db.cursor().execute(query)
 
-conn.execute(query_modules_table)
+def create_user_table():
+    query_users_table = (''' CREATE TABLE IF NOT EXISTS users 
+                      (id         TEXT    PRIMARY KEY,
+                        username    TEXT    NOT NULL,
+                       role        TEXT    NOT NULL
+                      );''')
 
-query_highscore_table = (''' CREATE TABLE IF NOT EXISTS highscores 
-                    (id             TEXT    PRIMARY KEY,
-                    user_id         TEXT    NOT NULL,
-                    module_name     TEXT    NOT NULL,
-                    highscore       INT,
-                    FOREIGN KEY(user_id) REFERENCES users(id),
-                    FOREIGN KEY(module_name) REFERENCES modules(id)
-                    );''')
+    DatabaseManager().query(query_users_table)
 
-conn.execute(query_highscore_table)
+def create_modules_table():
+    query_modules_table = (''' CREATE TABLE IF NOT EXISTS modules 
+                     (id             TEXT    PRIMARY KEY,
+                     module_name     TEXT    NOT NULL
+                     );''')
 
-conn.close()
+    DatabaseManager().query(query_modules_table)
+
+def create_highscore_table():
+    query_highscore_table = (''' CREATE TABLE IF NOT EXISTS highscores 
+                            (id             TEXT    PRIMARY KEY,
+                            user_id         TEXT    NOT NULL,
+                            module_name     TEXT    NOT NULL,
+                            highscore       INT,
+                            FOREIGN KEY(user_id) REFERENCES users(id),
+                            FOREIGN KEY(module_name) REFERENCES modules(id)
+                            );''')
+
+    DatabaseManager().query(query_highscore_table)
+
+def create_all_tables():
+    create_user_table()
+    create_modules_table()
+    create_highscore_table()
+    
+create_all_tables()
