@@ -5,8 +5,7 @@ from functools import wraps
 import sqlite3 as sql
 
 # put your user_id here
-ADMINS = ["github|59766382", "github|37813763", "github|95571837"]
-
+ADMINS = ["github|59766382", "github|37813763", "github|95571837", "github|59029239"]
 
 # Decorator
 def requires_auth(f):
