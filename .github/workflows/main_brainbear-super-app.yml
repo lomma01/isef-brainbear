@@ -91,4 +91,4 @@ jobs:
         with:
           app-name: 'brainbear-super-app'
           slot-name: 'Production'
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_93CFCD5A4E4D4121BB4C97FD36CF19BF }}
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_9ADB036045D14455A1472E325407D411 }}

@@ -1,4 +1,3 @@
-from flask import flash, request
 from flask import Flask
 from flask import redirect
 from flask import render_template
@@ -7,15 +6,14 @@ from flask import url_for
 from authlib.integrations.flask_client import OAuth
 from flask_wtf.csrf import CSRFProtect
 from urllib.parse import urlencode  # Abweichung von OAuth-Quickstarts
-from functools import wraps
 import auth
 import json
 import sqlite3 as sql
+import decorators
 
 app = Flask(__name__)
 csrf = CSRFProtect()
 csrf.init_app(app)
-
 
 # Secret key
 app.config['SECRET_KEY'] = "T5BPYMJD9GVKURSGTAXC"
@@ -35,18 +33,6 @@ auth0 = oauth.register(
 )
 
 
-# Decorator
-def requires_auth(f):
-    @wraps(f)
-    def decorated(*args, **kwargs):
-        if 'profile' not in session:
-            # Redirect to Login page here
-            return redirect('/')
-        return f(*args, **kwargs)
-
-    return decorated
-
-
 # Routes
 @app.route('/', methods=['GET'])
 def index():
@@ -54,6 +40,7 @@ def index():
 
 
 @app.route('/home', methods=['GET'])
+@decorators.requires_auth
 def home():
     return render_template('home.html',
                            userinfo=session['profile'],
@@ -62,7 +49,8 @@ def home():
 
 
 @app.route('/single', methods=['GET'])
-@requires_auth
+@decorators.requires_auth
+@decorators.student_only
 def single():
     return render_template('single.html',
                            userinfo=session['profile'],
@@ -71,7 +59,8 @@ def single():
 
 
 @app.route('/multi', methods=['GET'])
-@requires_auth
+@decorators.requires_auth
+@decorators.student_only
 def multi():
     return render_template('multi.html',
                            userinfo=session['profile'],
@@ -80,37 +69,52 @@ def multi():
 
 
 @app.route('/dashboard', methods=['GET'])
-@requires_auth
+@decorators.requires_auth
 def dashboard():
+    admin = decorators.is_admin()
+    dozent = decorators.is_dozent()
+    student = decorators.is_student()
     return render_template('dashboard.html',
                            userinfo=session['profile'],
                            userinfo_pretty=json.dumps(session['jwt_payload'],
-                                                      indent=4))
+                                                      indent=4),
+                           admin=admin,
+                           dozent=dozent,
+                           student=student)
 
 
 @app.route('/rank', methods=['GET'])
-@requires_auth
+@decorators.requires_auth
 def rank():
     return render_template('rank.html',
                            userinfo=session['profile'],
                            userinfo_pretty=json.dumps(session['jwt_payload'],
                                                       indent=4))
 
-@app.route('/list')
+
+@app.route('/list', methods=['GET'])
+@decorators.requires_auth
+@decorators.admin_only
 def list():
-    #link sql database
+    # link sql database
     con = sql.connect("database.db")
     con.row_factory = sql.Row
-    
-    #create a cursor
+
+    # create a cursor
     cur = con.cursor()
     cur.execute("select * from users")
-    
-    #rows to show data on /list page
+
+    # rows to show data on /list page
     rows = cur.fetchall()
-    return render_template("list.html", rows = rows)
+    return render_template("list.html",
+                           rows=rows,
+                           userinfo=session['profile'],
+                           userinfo_pretty=json.dumps(session['jwt_payload'],
+                                                      indent=4))
+
 
 @app.route('/about', methods=['GET'])
+@decorators.requires_auth
 def about():
     return render_template('about.html',
                            userinfo=session['profile'],
@@ -121,6 +125,11 @@ def about():
 @app.route('/about2', methods=['GET'])
 def about2():
     return render_template('about.html')
+
+
+@app.route('/error', methods=['GET'])
+def error():
+    return render_template('error.html')
 
 
 @app.route('/callback', methods=['GET'])
@@ -137,20 +146,20 @@ def callback_handling():
         'name': userinfo['name'],
         'picture': userinfo['picture']
     }
-    
-    #column names for sql database -> you also have to change it in the database.py!!!
+
+    # column names for sql database -> you also have to change it in the database.py!!!
     username = userinfo['name']
     user_id = userinfo['sub']
-    #for inital entries we use is_student
+    # for inital entries we use is_student
     role = 'is_student'
-    
+
     with sql.connect("database.db") as con:
         cur = con.cursor()
-        cur.execute("INSERT INTO users (id,username,role) VALUES (?,?,?)",(user_id,username,role) )
-            
+        cur.execute(
+            "INSERT OR IGNORE INTO users (id,username,role) VALUES (?,?,?)",
+            (user_id, username, role))
         con.commit()
-        msg = "Record successfully added"
-        #con.close()
+
         return redirect('/dashboard')
 
 
