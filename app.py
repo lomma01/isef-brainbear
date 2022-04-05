@@ -10,6 +10,7 @@ import auth
 import json
 import sqlite3 as sql
 import decorators
+from flask import request
 
 app = Flask(__name__)
 csrf = CSRFProtect()
@@ -92,7 +93,7 @@ def rank():
                                                       indent=4))
 
 
-@app.route('/list', methods=['GET'])
+@app.route('/list', methods=['GET', 'POST'])
 @decorators.requires_auth
 @decorators.admin_only
 def list():
@@ -106,8 +107,17 @@ def list():
 
     # rows to show data on /list page
     rows = cur.fetchall()
+
+    # UPDATE roles
+    roleupdate = decorators.UpdateRoles(request.form)
+    if request.method == 'POST' and roleupdate.validate():
+        id = roleupdate.id.data
+        role = roleupdate.role.data
+        # SQL Statement UPDATE roles
+    
     return render_template("list.html",
                            rows=rows,
+                           roleupdate=roleupdate,
                            userinfo=session['profile'],
                            userinfo_pretty=json.dumps(session['jwt_payload'],
                                                       indent=4))

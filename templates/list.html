@@ -18,6 +18,17 @@
             </tbody>
         </thead>
     </table>
+    <form method=post action="list">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+        <dl>
+            <label>ID: </label>
+            {{ roleupdate.id }} <p></p>
+            <label>Rolle: </label>
+            {{ roleupdate.role }}
+        </dl>
+        <p></p>
+        <input type=submit class="btn btn-warning" name='update' value='update'>
+</form>
     <a href="dashboard" class="nav-link px-2 text-muted">Zurück zum Dashboard</a>
 </div>
 {% endblock %}

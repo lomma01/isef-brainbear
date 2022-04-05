@@ -3,6 +3,7 @@ from flask import session
 from flask import url_for
 from functools import wraps
 import sqlite3 as sql
+from wtforms import Form, StringField
 
 # put your user_id here
 ADMINS = ["github|59766382", "github|37813763"]
@@ -22,13 +23,14 @@ def requires_auth(f):
 # Helper Functions
 # Checks if user_id from session is present in userstore from db and member of specific role
 def is_admin():
+    con = sql.connect('database.db')
+    con.row_factory = sql.Row
+    cur = con.cursor()
+    userstore = cur.execute("SELECT * FROM users;").fetchall()
     if session["profile"]["user_id"] in ADMINS:
+        # SQL Satement: UPDATE role to is_admin
         return True
     else:
-        con = sql.connect('database.db')
-        con.row_factory = sql.Row
-        cur = con.cursor()
-        userstore = cur.execute("SELECT * FROM users;").fetchall()
         for i in userstore:
             if session["profile"]["user_id"] in i and "is_admin" in i:
                 return True
@@ -125,3 +127,8 @@ def not_student_only(f):
         return f(*args, **kwargs)
 
     return decorated_function
+
+
+class UpdateRoles(Form):
+    id = StringField('ID')
+    role = StringField('Rolle')
