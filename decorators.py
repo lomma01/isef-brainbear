@@ -2,8 +2,8 @@ from flask import redirect
 from flask import session
 from flask import url_for
 from functools import wraps
-import sqlite3 as sql
 from wtforms import Form, StringField
+import database
 
 # put your user_id here
 ADMINS = ["github|59766382", "github|37813763", "github|95571837", "github|59029239"]
@@ -22,10 +22,7 @@ def requires_auth(f):
 # Helper Functions
 # Checks if user_id from session is present in userstore from db and member of specific role
 def is_admin():
-    con = sql.connect('database.db')
-    con.row_factory = sql.Row
-    cur = con.cursor()
-    userstore = cur.execute("SELECT * FROM users;").fetchall()
+    userstore = database.DatabaseManager().fetch_all_user_rows()
     if session["profile"]["user_id"] in ADMINS:
         # SQL Satement: UPDATE role to is_admin
         return True
@@ -34,14 +31,11 @@ def is_admin():
             if session["profile"]["user_id"] in i and "is_admin" in i:
                 return True
             else:
-                return False
+                continue
 
 
 def is_dozent():
-    con = sql.connect('database.db')
-    con.row_factory = sql.Row
-    cur = con.cursor()
-    userstore = cur.execute("SELECT * FROM users;").fetchall()
+    userstore = database.DatabaseManager().fetch_all_user_rows()
     for i in userstore:
         if session["profile"]["user_id"] in i and "is_dozent" in i:
             return True
@@ -50,10 +44,7 @@ def is_dozent():
 
 
 def is_student():
-    con = sql.connect('database.db')
-    con.row_factory = sql.Row
-    cur = con.cursor()
-    userstore = cur.execute("SELECT * FROM users;").fetchall()
+    userstore = database.DatabaseManager().fetch_all_user_rows()
     for i in userstore:
         if session["profile"]["user_id"] in i and "is_student" in i:
             return True

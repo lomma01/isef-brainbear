@@ -42,6 +42,7 @@ def index():
 
 
 @app.route('/home', methods=['GET'])
+# only for logged in users
 @decorators.requires_auth
 def home():
     return render_template('home.html',
@@ -52,7 +53,8 @@ def home():
 
 @app.route('/single', methods=['GET'])
 @decorators.requires_auth
-@decorators.student_only
+# only for student and dozent
+@decorators.not_admin_only
 def single():
     return render_template('single.html',
                            userinfo=session['profile'],
@@ -62,7 +64,8 @@ def single():
 
 @app.route('/multi', methods=['GET'])
 @decorators.requires_auth
-@decorators.student_only
+# only for student and dozent
+@decorators.not_admin_only
 def multi():
     return render_template('multi.html',
                            userinfo=session['profile'],
@@ -71,6 +74,7 @@ def multi():
 
 
 @app.route('/dashboard', methods=['GET'])
+# only for logged in users
 @decorators.requires_auth
 def dashboard():
     admin = decorators.is_admin()
@@ -84,25 +88,33 @@ def dashboard():
                            dozent=dozent,
                            student=student)
 
-#Route for add Moduls (hp)
+
+# Route for add Moduls (hp)
 @app.route('/add_modules', methods=['GET'])
 @decorators.requires_auth
+# only for admins and dozent
+@decorators.not_student_only
 def add_modules():
     return render_template('add_modules.html',
                            userinfo=session['profile'],
                            userinfo_pretty=json.dumps(session['jwt_payload'],
                                                       indent=4))
 
-#Route for add Questions (hp)
+
+# Route for add Questions (hp)
 @app.route('/add_questions', methods=['GET'])
 @decorators.requires_auth
+# only for student and dozent
+@decorators.not_admin_only
 def add_questions():
     return render_template('add_questions.html',
                            userinfo=session['profile'],
                            userinfo_pretty=json.dumps(session['jwt_payload'],
                                                       indent=4))
 
+
 @app.route('/rank', methods=['GET'])
+# only for logged in users
 @decorators.requires_auth
 def rank():
     return render_template('rank.html',
@@ -113,6 +125,7 @@ def rank():
 
 @app.route('/list', methods=['GET', 'POST'])
 @decorators.requires_auth
+# only for admins
 @decorators.admin_only
 def list():
     # UPDATE roles
@@ -121,7 +134,7 @@ def list():
         id = roleupdate.id.data
         role = roleupdate.role.data
         # SQL Statement UPDATE users role
-    
+
     rows = database.DatabaseManager().fetch_all_user_rows()
     return render_template("list.html",
                            rows=rows,
@@ -171,6 +184,7 @@ def callback_handling():
     # for inital entries we use is_student
     role = 'is_student'
 
+    # SQL Statement INSERT OR IGNORE
     with sql.connect("database.db") as con:
         cur = con.cursor()
         cur.execute(

@@ -3,18 +3,19 @@
 <div class="container">
     {% if student %}
     <!-- STUDENT -->
+    Student Panel: </br>
     <a href="add_questions" class="nav-link">Fragen verwalten</a>
-    
     {% endif %}
     {% if dozent %}
     <!-- DOZENT -->
+    Dozent Panel: </br>
     <a href="#" class="nav-link">Fragen verwalten</a>
-    <a href="add_moduls" class="nav-link">Module verwalten</a>    
+    <a href="add_modules" class="nav-link">Module verwalten</a>
     {% endif %}
     {% if admin %}
     <!-- ADMIN -->
-    <a href="add_modules" class="nav-link">Module verwalten</a>
     Admin Panel: </br>
+    <a href="add_modules" class="nav-link">Module verwalten</a>
     <a href="list" class="nav-link">Userverwaltung</a>   
     {% endif %}
 </div>
