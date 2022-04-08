@@ -37,9 +37,11 @@ def create_user_table():
     DatabaseManager().query(query_users_table)
 
 def create_modules_table():
+    global query_modules_table
     query_modules_table = (''' CREATE TABLE IF NOT EXISTS modules 
                      (id             TEXT    PRIMARY KEY,
-                     module_name     TEXT    NOT NULL
+                     designation     TEXT    NOT NULL,
+                     module     TEXT    NOT NULL
                      );''')
 
     DatabaseManager().query(query_modules_table)
@@ -48,10 +50,10 @@ def create_highscore_table():
     query_highscore_table = (''' CREATE TABLE IF NOT EXISTS highscores 
                             (id             TEXT    PRIMARY KEY,
                             user_id         TEXT    NOT NULL,
-                            module_name     TEXT    NOT NULL,
+                            module     TEXT    NOT NULL,
                             highscore       INT,
                             FOREIGN KEY(user_id) REFERENCES users(id),
-                            FOREIGN KEY(module_name) REFERENCES modules(id)
+                            FOREIGN KEY(module) REFERENCES modules(id)
                             );''')
 
     DatabaseManager().query(query_highscore_table)

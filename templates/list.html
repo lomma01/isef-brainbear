@@ -1,6 +1,7 @@
 {% extends "layout.html" %}
 {% block content %}
 <div class="container">
+    <h4>Userverwaltung</h4>
     <table border=3 rules=rows style="width:100%" aria-describedby="overview users">
         <caption>Tabelle: Übersicht User, Rollen und IDs</caption>
         <thead>
@@ -18,17 +19,17 @@
             </tbody>
         </thead>
     </table>
-    <form method=post action="list">
+    <p></p>
+    <h4>Berechtigung festlegen</h4>
+    <form method=post id="list">
         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
-        <dl>
-            <label>ID: </label>
-            {{ roleupdate.id }} <p></p>
-            <label>Rolle: </label>
-            {{ roleupdate.role }}
-        </dl>
+        
+            <label class="form-label" for="id" style="width: 5%">ID: </label> {{ roleupdate.id }} <p></p>
+            <label class="form-label" for="role" style="width: 5%">Rolle: </label> {{ roleupdate.role }}
+        
         <p></p>
-        <input type=submit class="btn btn-warning" name='update' value='update'>
-</form>
-    <a href="dashboard" class="nav-link px-2 text-muted">Zurück zum Dashboard</a>
+        <input type=submit class="btn btn-primary" name='speichern' value='Speichern'>
+        <a href="dashboard" class="btn btn-primary">Abbrechen</a>
+    </form>
 </div>
 {% endblock %}

@@ -2,7 +2,7 @@ from flask import redirect
 from flask import session
 from flask import url_for
 from functools import wraps
-from wtforms import Form, StringField
+from wtforms import Form, StringField, SelectField, TextAreaField, validators
 import database
 
 # put your user_id here
@@ -120,5 +120,42 @@ def not_student_only(f):
 
 
 class UpdateRoles(Form):
-    id = StringField('ID')
-    role = StringField('Rolle')
+    roles = ['is_student', 'is_dozent', 'is_admin']
+    userstore = database.DatabaseManager().fetch_all_user_rows()
+    userlist = []
+    for i in userstore:
+        userlist.append(i["id"])
+    id = SelectField('ID', choices=userlist)
+    role = SelectField('Rolle', choices=roles)
+
+
+class AddModule(Form):
+    course = StringField("course", validators=[validators.DataRequired()])  # Studiengang
+    id = StringField('id', validators=[validators.DataRequired()])  # Kurskürzel
+    designation = StringField('designation', validators=[validators.DataRequired()])  # Beschreibung des Kurses
+    chapter = StringField('chapter', validators=[validators.DataRequired()])  # Kapitel / Lektion
+
+class AddQuestions(Form):
+    # modulestore = database.DatabaseManager()....
+    courselist = ["Informatik", "Wirtschaftsinformatik"]  # Liste der Studiengänge
+    idlist = ["IMT01", "IMT02"]  # Liste der Kurskürzel
+    chapterlist = ["Lektion 1", "Lektion 2"]  # Liste der Kapitel / Lektionen
+    '''for i in modulestore:
+        courselist.append(i["course"])
+        idlist.append(i["id"])
+        chapterlist.append(i["chapter"])'''
+    course = SelectField("course", choices=courselist)
+    id = SelectField('id', choices=idlist)
+    chapter = SelectField('chapter', choices=chapterlist)
+    question = TextAreaField('question', validators=[validators.DataRequired()])
+    # question = StringField('question', validators=[validators.DataRequired()])  # Frage
+    answer_one = TextAreaField('answer_one', validators=[validators.DataRequired()])  # Antwort 1
+    answer_two = TextAreaField('answer_two', validators=[validators.DataRequired()])  # Antwort 2
+    answer_three = TextAreaField('answer_three', validators=[validators.DataRequired()])  # Antwort 3
+    answer_four = TextAreaField('answer_four', validators=[validators.DataRequired()])  # Antwort 4
+    hint = TextAreaField('hint')  # Hinweis optional
+
+def output(x):
+    with open("output.txt", "w") as file:
+        file.write(str(x))
+        file.close()

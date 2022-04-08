@@ -93,7 +93,16 @@ def dashboard():
 # only for admins and dozent
 @decorators.not_student_only
 def add_modules():
+    addmodule = decorators.AddModule(request.form)
+    if request.method == 'POST' and addmodule.validate():
+        course = addmodule.course.data
+        id = addmodule.id.data
+        designation = addmodule.designation.data
+        chapter = addmodule.chapter.data
+        # SQL Statement addmodule
+
     return render_template('add_modules.html',
+                           addmodule=addmodule,
                            userinfo=session['profile'],
                            userinfo_pretty=json.dumps(session['jwt_payload'],
                                                       indent=4))
@@ -104,8 +113,22 @@ def add_modules():
 # only for logged in users
 @decorators.requires_auth
 def add_questions():
+    addquestions = decorators.AddQuestions(request.form)
+    if request.method == 'POST' and addquestions.validate():
+        course = addquestions.course.data
+        id = addquestions.id.data
+        chapter = addquestions.chapter.data
+        question = addquestions.question.data
+        answer_one = addquestions.answer_one.data
+        answer_two = addquestions.answer_two.data
+        answer_three = addquestions.answer_three.data
+        answer_four = addquestions.answer_four.data
+        hint = addquestions.hint.data
+        # SQL Statement frommodule
+        
     return render_template('add_questions.html',
                            userinfo=session['profile'],
+                           addquestions=addquestions,
                            userinfo_pretty=json.dumps(session['jwt_payload'],
                                                       indent=4))
 
