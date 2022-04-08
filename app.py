@@ -125,7 +125,7 @@ def add_questions():
         answer_four = addquestions.answer_four.data
         hint = addquestions.hint.data
         # SQL Statement frommodule
-        
+
     return render_template('add_questions.html',
                            userinfo=session['profile'],
                            addquestions=addquestions,

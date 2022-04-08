@@ -6,7 +6,10 @@ from wtforms import Form, StringField, SelectField, TextAreaField, validators
 import database
 
 # put your user_id here
-ADMINS = ["github|59766382", "github|37813763", "github|95571837", "github|59029239"]
+ADMINS = [
+    "github|59766382", "github|37813763", "github|95571837", "github|59029239"
+]
+
 
 # Decorator
 def requires_auth(f):
@@ -130,14 +133,21 @@ class UpdateRoles(Form):
 
 
 class AddModule(Form):
-    course = StringField("course", validators=[validators.DataRequired()])  # Studiengang
-    id = StringField('id', validators=[validators.DataRequired()])  # Kurskürzel
-    designation = StringField('designation', validators=[validators.DataRequired()])  # Beschreibung des Kurses
-    chapter = StringField('chapter', validators=[validators.DataRequired()])  # Kapitel / Lektion
+    course = StringField("course",
+                         validators=[validators.DataRequired()])  # Studiengang
+    id = StringField('id',
+                     validators=[validators.DataRequired()])  # Kurskürzel
+    designation = StringField('designation',
+                              validators=[validators.DataRequired()
+                                          ])  # Beschreibung des Kurses
+    chapter = StringField('chapter', validators=[validators.DataRequired()
+                                                 ])  # Kapitel / Lektion
+
 
 class AddQuestions(Form):
     # modulestore = database.DatabaseManager()....
-    courselist = ["Informatik", "Wirtschaftsinformatik"]  # Liste der Studiengänge
+    courselist = ["Informatik",
+                  "Wirtschaftsinformatik"]  # Liste der Studiengänge
     idlist = ["IMT01", "IMT02"]  # Liste der Kurskürzel
     chapterlist = ["Lektion 1", "Lektion 2"]  # Liste der Kapitel / Lektionen
     '''for i in modulestore:
@@ -147,13 +157,23 @@ class AddQuestions(Form):
     course = SelectField("course", choices=courselist)
     id = SelectField('id', choices=idlist)
     chapter = SelectField('chapter', choices=chapterlist)
-    question = TextAreaField('question', validators=[validators.DataRequired()])
+    question = TextAreaField('question',
+                             validators=[validators.DataRequired()])
     # question = StringField('question', validators=[validators.DataRequired()])  # Frage
-    answer_one = TextAreaField('answer_one', validators=[validators.DataRequired()])  # Antwort 1
-    answer_two = TextAreaField('answer_two', validators=[validators.DataRequired()])  # Antwort 2
-    answer_three = TextAreaField('answer_three', validators=[validators.DataRequired()])  # Antwort 3
-    answer_four = TextAreaField('answer_four', validators=[validators.DataRequired()])  # Antwort 4
+    answer_one = TextAreaField('answer_one',
+                               validators=[validators.DataRequired()
+                                           ])  # Antwort 1
+    answer_two = TextAreaField('answer_two',
+                               validators=[validators.DataRequired()
+                                           ])  # Antwort 2
+    answer_three = TextAreaField('answer_three',
+                                 validators=[validators.DataRequired()
+                                             ])  # Antwort 3
+    answer_four = TextAreaField('answer_four',
+                                validators=[validators.DataRequired()
+                                            ])  # Antwort 4
     hint = TextAreaField('hint')  # Hinweis optional
+
 
 def output(x):
     with open("output.txt", "w") as file:
