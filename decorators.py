@@ -24,7 +24,7 @@ def requires_auth(f):
 def is_admin():
     userstore = database.DatabaseManager().fetch_all_user_rows()
     if session["profile"]["user_id"] in ADMINS:
-        # SQL Satement: UPDATE role to is_admin
+        database.update_user_role("is_admin", session["profile"]["user_id"])
         return True
     else:
         for i in userstore:
