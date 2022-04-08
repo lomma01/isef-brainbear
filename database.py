@@ -69,10 +69,26 @@ def create_highscore_table():
                             );''')
 
     DatabaseManager().query(query_highscore_table)
+    
+def create_question_table():
+    query_question_table = (''' CREATE TABLE IF NOT EXISTS questions 
+                            (id             TEXT    PRIMARY KEY,
+                            module_name     TEXT    NOT NULL,
+                            chapter         TEXT    NOT NULL,
+                            question        TEXT    NOT NULL,
+                            correct_answer  TEXT    NOT NULL,
+                            wrong_answer_1  TEXT    NOT NULL,
+                            wrong_answer_2  TEXT    NOT NULL,
+                            wrong_answer_3  TEXT    NOT NULL,
+                            FOREIGN KEY(module_name) REFERENCES modules(id)
+                            );''')
+
+    DatabaseManager().query(query_question_table)
 
 def create_all_tables():
     create_user_table()
     create_modules_table()
     create_highscore_table()
+    create_question_table()
     
 create_all_tables()
