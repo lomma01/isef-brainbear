@@ -147,12 +147,12 @@ class AddModule(Form):
 
 class AddQuestions(Form):
     # modulestore = database.DatabaseManager()....
-    courselist = ["Inf", "BWL"]  # Liste der Studiengänge
-    modulelist = ["T1", "T2"]  # Liste der Kurskürzel
-    chapterlist = ["L1", "L2"]  # Liste der Kapitel / Lektionen
+    courselist = []  # Liste der Studiengänge
+    modulelist = []  # Liste der Kurskürzel
+    chapterlist = []  # Liste der Kapitel / Lektionen
     '''for i in modulestore:
-        courselist.append(i["course"])
-        idlist.append(i["id"])
+        courselist.append(i["studiengang_name"])
+        modulelist.append(i["module_name"])
         chapterlist.append(i["chapter"])'''
     studiengang_name = SelectField("studiengang_name", choices=courselist)
     module_name = SelectField('module_name', choices=modulelist)

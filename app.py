@@ -99,7 +99,7 @@ def add_modules():
         designation = addmodule.designation.data
         chapter = addmodule.chapter.data
         # SQL Statement addmodule
-
+        
     return render_template('add_modules.html',
                            addmodule=addmodule,
                            userinfo=session['profile'],
@@ -123,11 +123,11 @@ def add_questions():
         wrong_answer_2 = addquestions.wrong_answer_2.data
         wrong_answer_3 = addquestions.wrong_answer_3.data
         hint = addquestions.hint.data
-        # SQL Statement frommodule
-
+        # SQL Statement frommodule)
+        
     return render_template('add_questions.html',
-                           userinfo=session['profile'],
                            addquestions=addquestions,
+                           userinfo=session['profile'],
                            userinfo_pretty=json.dumps(session['jwt_payload'],
                                                       indent=4))
 
