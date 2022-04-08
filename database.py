@@ -20,6 +20,23 @@ class DatabaseManager(object):
             curs.execute("SELECT * FROM users")
             rows = curs.fetchall()
             return rows
+        
+def insert_user_into_user_table(user_id,username,role):
+    try:
+        connect_to_sql_db = sql.connect('database.db')
+        
+        query = """INSERT OR IGNORE INTO users (id,username,role) VALUES (?,?,?)"""
+        data = (user_id, username, role)
+        connect_to_sql_db.cursor().execute(query,data)
+        connect_to_sql_db.commit()
+        connect_to_sql_db.close()
+        
+    except sql.Error as error:
+        print("Failed to insert user in user table", error)
+    finally:
+        if connect_to_sql_db:
+            connect_to_sql_db.close()
+        
 
 def update_user_role(role,user_id):
     try:
