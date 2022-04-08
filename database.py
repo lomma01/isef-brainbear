@@ -1,5 +1,4 @@
 import sqlite3 as sql
-from sqlite3 import Error
 
 class DatabaseManager(object):
     def __init__(self):
@@ -21,8 +20,39 @@ class DatabaseManager(object):
             curs.execute("SELECT * FROM users")
             rows = curs.fetchall()
             return rows
-
-
+        
+def insert_user_into_user_table(user_id,username,role):
+    try:
+        connect_to_sql_db = sql.connect('database.db')
+        
+        query = """INSERT OR IGNORE INTO users (id,username,role) VALUES (?,?,?)"""
+        data = (user_id, username, role)
+        connect_to_sql_db.cursor().execute(query,data)
+        connect_to_sql_db.commit()
+        connect_to_sql_db.close()
+        
+    except sql.Error as error:
+        print("Failed to insert user in user table", error)
+    finally:
+        if connect_to_sql_db:
+            connect_to_sql_db.close()
+        
+def update_user_role(role,user_id):
+    try:
+        connect_to_sql_db = sql.connect('database.db')
+        
+        query = """UPDATE users SET role = ? WHERE id = ?"""
+        data = (role,user_id)
+        connect_to_sql_db.cursor().execute(query,data)
+        connect_to_sql_db.commit()
+        connect_to_sql_db.close()
+    
+    except sql.Error as error:
+        print("Failed to update user table", error)
+    finally:
+        if connect_to_sql_db:
+            connect_to_sql_db.close()
+        
 def database_query(query):
     connect_to_sql_db = sql.connect('database.db')
     connect_to_sql_db.cursor().execute(query)
@@ -39,10 +69,18 @@ def create_user_table():
 def create_modules_table():
     query_modules_table = (''' CREATE TABLE IF NOT EXISTS modules 
                      (id             TEXT    PRIMARY KEY,
-                     module_name     TEXT    NOT NULL
+                     module_name     TEXT    UNIQUE
                      );''')
 
     DatabaseManager().query(query_modules_table)
+    
+def create_studiengang_table():
+    query_studiengang_table = (''' CREATE TABLE IF NOT EXISTS studiengang 
+                     (id                TEXT    PRIMARY KEY,
+                     studiengang_name   TEXT    UNIQUE
+                     );''')
+
+    DatabaseManager().query(query_studiengang_table)
 
 def create_highscore_table():
     query_highscore_table = (''' CREATE TABLE IF NOT EXISTS highscores 
@@ -55,10 +93,29 @@ def create_highscore_table():
                             );''')
 
     DatabaseManager().query(query_highscore_table)
+    
+def create_question_table():
+    query_question_table = (''' CREATE TABLE IF NOT EXISTS questions 
+                            (id                 TEXT    PRIMARY KEY,
+                            studiengang_name    TEXT    NOT NULL,
+                            module_name         TEXT    NOT NULL,
+                            chapter             TEXT    NOT NULL,
+                            question            TEXT    NOT NULL,
+                            correct_answer      TEXT    NOT NULL,
+                            wrong_answer_1      TEXT    NOT NULL,
+                            wrong_answer_2      TEXT    NOT NULL,
+                            wrong_answer_3      TEXT    NOT NULL,
+                            FOREIGN KEY(studiengang_name) REFERENCES studiengang(id),
+                            FOREIGN KEY(module_name) REFERENCES modules(id)
+                            );''')
+
+    DatabaseManager().query(query_question_table)
 
 def create_all_tables():
     create_user_table()
     create_modules_table()
     create_highscore_table()
+    create_question_table()
+    create_studiengang_table()
     
 create_all_tables()

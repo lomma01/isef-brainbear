@@ -130,7 +130,7 @@ def list():
     if request.method == 'POST' and roleupdate.validate():
         id = roleupdate.id.data
         role = roleupdate.role.data
-        # SQL Statement UPDATE users role
+        database.update_user_role(role,id)
 
     rows = database.DatabaseManager().fetch_all_user_rows()
     return render_template("list.html",
@@ -179,18 +179,11 @@ def callback_handling():
     # column names for sql database -> you also have to change it in the database.py!!!
     username = userinfo['name']
     user_id = userinfo['sub']
+    
     # for inital entries we use is_student
-    role = 'is_student'
+    database.insert_user_into_user_table(user_id,username,"is_student")
 
-    # SQL Statement INSERT OR IGNORE
-    with sql.connect("database.db") as con:
-        cur = con.cursor()
-        cur.execute(
-            "INSERT OR IGNORE INTO users (id,username,role) VALUES (?,?,?)",
-            (user_id, username, role))
-        con.commit()
-
-        return redirect('/dashboard')
+    return redirect('/dashboard')
 
 
 @app.route('/login', methods=['GET'])
