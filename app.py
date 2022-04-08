@@ -130,7 +130,7 @@ def list():
     if request.method == 'POST' and roleupdate.validate():
         id = roleupdate.id.data
         role = roleupdate.role.data
-        # SQL Statement UPDATE users role
+        database.update_user_role(role,id)
 
     rows = database.DatabaseManager().fetch_all_user_rows()
     return render_template("list.html",

@@ -1,5 +1,4 @@
 import sqlite3 as sql
-from sqlite3 import Error
 
 class DatabaseManager(object):
     def __init__(self):
@@ -22,7 +21,22 @@ class DatabaseManager(object):
             rows = curs.fetchall()
             return rows
 
-
+def update_user_role(role,user_id):
+    try:
+        connect_to_sql_db = sql.connect('database.db')
+        
+        query = """UPDATE users SET role = ? WHERE id = ?"""
+        data = (role,user_id)
+        connect_to_sql_db.cursor().execute(query,data)
+        connect_to_sql_db.commit()
+        connect_to_sql_db.close()
+    
+    except sql.Error as error:
+        print("Failed to update user table", error)
+    finally:
+        if connect_to_sql_db:
+            connect_to_sql_db.close()
+        
 def database_query(query):
     connect_to_sql_db = sql.connect('database.db')
     connect_to_sql_db.cursor().execute(query)
