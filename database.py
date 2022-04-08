@@ -37,7 +37,6 @@ def insert_user_into_user_table(user_id,username,role):
         if connect_to_sql_db:
             connect_to_sql_db.close()
         
-
 def update_user_role(role,user_id):
     try:
         connect_to_sql_db = sql.connect('database.db')
@@ -70,10 +69,18 @@ def create_user_table():
 def create_modules_table():
     query_modules_table = (''' CREATE TABLE IF NOT EXISTS modules 
                      (id             TEXT    PRIMARY KEY,
-                     module_name     TEXT    NOT NULL
+                     module_name     TEXT    UNIQUE
                      );''')
 
     DatabaseManager().query(query_modules_table)
+    
+def create_studiengang_table():
+    query_studiengang_table = (''' CREATE TABLE IF NOT EXISTS studiengang 
+                     (id                TEXT    PRIMARY KEY,
+                     studiengang_name   TEXT    UNIQUE
+                     );''')
+
+    DatabaseManager().query(query_studiengang_table)
 
 def create_highscore_table():
     query_highscore_table = (''' CREATE TABLE IF NOT EXISTS highscores 
@@ -89,14 +96,16 @@ def create_highscore_table():
     
 def create_question_table():
     query_question_table = (''' CREATE TABLE IF NOT EXISTS questions 
-                            (id             TEXT    PRIMARY KEY,
-                            module_name     TEXT    NOT NULL,
-                            chapter         TEXT    NOT NULL,
-                            question        TEXT    NOT NULL,
-                            correct_answer  TEXT    NOT NULL,
-                            wrong_answer_1  TEXT    NOT NULL,
-                            wrong_answer_2  TEXT    NOT NULL,
-                            wrong_answer_3  TEXT    NOT NULL,
+                            (id                 TEXT    PRIMARY KEY,
+                            studiengang_name    TEXT    NOT NULL,
+                            module_name         TEXT    NOT NULL,
+                            chapter             TEXT    NOT NULL,
+                            question            TEXT    NOT NULL,
+                            correct_answer      TEXT    NOT NULL,
+                            wrong_answer_1      TEXT    NOT NULL,
+                            wrong_answer_2      TEXT    NOT NULL,
+                            wrong_answer_3      TEXT    NOT NULL,
+                            FOREIGN KEY(studiengang_name) REFERENCES studiengang(id),
                             FOREIGN KEY(module_name) REFERENCES modules(id)
                             );''')
 
@@ -107,5 +116,6 @@ def create_all_tables():
     create_modules_table()
     create_highscore_table()
     create_question_table()
+    create_studiengang_table()
     
 create_all_tables()
