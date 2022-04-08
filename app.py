@@ -8,7 +8,6 @@ from flask_wtf.csrf import CSRFProtect
 from urllib.parse import urlencode  # Abweichung von OAuth-Quickstarts
 import auth
 import json
-import sqlite3 as sql
 import decorators
 from flask import request
 import database
@@ -94,9 +93,9 @@ def dashboard():
 @decorators.not_student_only
 def add_modules():
     addmodule = decorators.AddModule(request.form)
-    if request.method == 'POST' and addmodule.validate():
-        course = addmodule.course.data
-        id = addmodule.id.data
+    if request.method == 'POST':
+        studiengang_name = addmodule.studiengang_name.data
+        module_name = addmodule.module_name.data
         designation = addmodule.designation.data
         chapter = addmodule.chapter.data
         # SQL Statement addmodule
@@ -114,15 +113,15 @@ def add_modules():
 @decorators.requires_auth
 def add_questions():
     addquestions = decorators.AddQuestions(request.form)
-    if request.method == 'POST' and addquestions.validate():
-        course = addquestions.course.data
-        id = addquestions.id.data
+    if request.method == 'POST':
+        studiengang_name = addquestions.studiengang_name.data
+        module_name = addquestions.module_name.data
         chapter = addquestions.chapter.data
         question = addquestions.question.data
-        answer_one = addquestions.answer_one.data
-        answer_two = addquestions.answer_two.data
-        answer_three = addquestions.answer_three.data
-        answer_four = addquestions.answer_four.data
+        correct_answer = addquestions.correct_answer.data
+        wrong_answer_1 = addquestions.wrong_answer_1.data
+        wrong_answer_2 = addquestions.wrong_answer_2.data
+        wrong_answer_3 = addquestions.wrong_answer_3.data
         hint = addquestions.hint.data
         # SQL Statement frommodule
 
@@ -153,7 +152,7 @@ def list():
     if request.method == 'POST' and roleupdate.validate():
         id = roleupdate.id.data
         role = roleupdate.role.data
-        # SQL Statement UPDATE users role
+        database.update_user_role(role,id)
 
     rows = database.DatabaseManager().fetch_all_user_rows()
     return render_template("list.html",
@@ -202,18 +201,11 @@ def callback_handling():
     # column names for sql database -> you also have to change it in the database.py!!!
     username = userinfo['name']
     user_id = userinfo['sub']
+    
     # for inital entries we use is_student
-    role = 'is_student'
+    database.insert_user_into_user_table(user_id,username,"is_student")
 
-    # SQL Statement INSERT OR IGNORE
-    with sql.connect("database.db") as con:
-        cur = con.cursor()
-        cur.execute(
-            "INSERT OR IGNORE INTO users (id,username,role) VALUES (?,?,?)",
-            (user_id, username, role))
-        con.commit()
-
-        return redirect('/dashboard')
+    return redirect('/dashboard')
 
 
 @app.route('/login', methods=['GET'])

@@ -27,7 +27,7 @@ def requires_auth(f):
 def is_admin():
     userstore = database.DatabaseManager().fetch_all_user_rows()
     if session["profile"]["user_id"] in ADMINS:
-        # SQL Satement: UPDATE role to is_admin
+        database.update_user_role("is_admin", session["profile"]["user_id"])
         return True
     else:
         for i in userstore:
@@ -133,10 +133,11 @@ class UpdateRoles(Form):
 
 
 class AddModule(Form):
-    course = StringField("course",
-                         validators=[validators.DataRequired()])  # Studiengang
-    id = StringField('id',
-                     validators=[validators.DataRequired()])  # Kurskürzel
+    id = StringField('id', validators=[validators.DataRequired()])
+    studiengang_name = StringField("studiengang_name",
+                                   validators=[validators.DataRequired()])
+    module_name = StringField('module_name',
+                              validators=[validators.DataRequired()])
     designation = StringField('designation',
                               validators=[validators.DataRequired()
                                           ])  # Beschreibung des Kurses
@@ -146,32 +147,31 @@ class AddModule(Form):
 
 class AddQuestions(Form):
     # modulestore = database.DatabaseManager()....
-    courselist = ["Informatik",
-                  "Wirtschaftsinformatik"]  # Liste der Studiengänge
-    idlist = ["IMT01", "IMT02"]  # Liste der Kurskürzel
-    chapterlist = ["Lektion 1", "Lektion 2"]  # Liste der Kapitel / Lektionen
+    courselist = ["Inf", "BWL"]  # Liste der Studiengänge
+    modulelist = ["T1", "T2"]  # Liste der Kurskürzel
+    chapterlist = ["L1", "L2"]  # Liste der Kapitel / Lektionen
     '''for i in modulestore:
         courselist.append(i["course"])
         idlist.append(i["id"])
         chapterlist.append(i["chapter"])'''
-    course = SelectField("course", choices=courselist)
-    id = SelectField('id', choices=idlist)
+    studiengang_name = SelectField("studiengang_name", choices=courselist)
+    module_name = SelectField('module_name', choices=modulelist)
     chapter = SelectField('chapter', choices=chapterlist)
     question = TextAreaField('question',
                              validators=[validators.DataRequired()])
     # question = StringField('question', validators=[validators.DataRequired()])  # Frage
-    answer_one = TextAreaField('answer_one',
-                               validators=[validators.DataRequired()
-                                           ])  # Antwort 1
-    answer_two = TextAreaField('answer_two',
-                               validators=[validators.DataRequired()
-                                           ])  # Antwort 2
-    answer_three = TextAreaField('answer_three',
-                                 validators=[validators.DataRequired()
-                                             ])  # Antwort 3
-    answer_four = TextAreaField('answer_four',
-                                validators=[validators.DataRequired()
-                                            ])  # Antwort 4
+    correct_answer = TextAreaField('correct_answer',
+                                   validators=[validators.DataRequired()
+                                               ])  # Antwort 1
+    wrong_answer_1 = TextAreaField('wrong_answer_1',
+                                   validators=[validators.DataRequired()
+                                               ])  # Antwort 2
+    wrong_answer_2 = TextAreaField('wrong_answer_2',
+                                   validators=[validators.DataRequired()
+                                               ])  # Antwort 3
+    wrong_answer_3 = TextAreaField('wrong_answer_3',
+                                   validators=[validators.DataRequired()
+                                               ])  # Antwort 4
     hint = TextAreaField('hint')  # Hinweis optional
 
 

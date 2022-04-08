@@ -3,19 +3,19 @@
 <div class="container">
     <form method="post" id="modul">
         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
-        <label class="form-label" for="course" style="width: 10%">Studiengang:</label>
-        {{ addmodule.id }}
+        <label class="form-label" for="studiengang_name" style="width: 10%">Studiengang:</label>
+        {{ addmodule.studiengang_name }}
         <span class="text-muted">(Pflichtfeld)</span>
         <p></p>
-        <label class="form-label" for="id" style="width: 10%">Kurskürzel:</label>
-        {{ addmodule.id }}
+        <label class="form-label" for="module_name" style="width: 10%">Kurskürzel:</label>
+        {{ addmodule.module_name }}
         <span class="text-muted">(Pflichtfeld)</span>
         <p></p>
         <label class="form-label" for="designation" style="width: 10%">Bezeichnung:</label>
         {{ addmodule.designation }}
         <span class="text-muted">(Pflichtfeld)</span>
         <p></p>
-        <label class="form-label" for="module" style="width: 10%">Kapitel:</label>
+        <label class="form-label" for="chapter" style="width: 10%">Kapitel:</label>
         {{ addmodule.chapter }}
         <span class="text-muted">(Pflichtfeld)</span>
         <p></p>

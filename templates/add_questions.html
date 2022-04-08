@@ -3,33 +3,33 @@
 <div class="container">
     <form method="post" id="questions_add">
         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
-        <label class="form-label" for="studiengang" style="width: 20%">Studiengang:</label>
-        {{ addquestions.course }}
+        <label class="form-label" for="studiengang_name" style="width: 20%">Studiengang:</label>
+        {{ addquestions.studiengang_name }}
         <p></p>
-        <label class="form-label" for="id" style="width: 20%">Kurskürzel:</label>
-        {{ addquestions.id }}
+        <label class="form-label" for="module_name" style="width: 20%">Kurskürzel:</label>
+        {{ addquestions.module_name }}
         <p></p>
-        <label class="form-label" for="kapitel" style="width: 20%">Kapitel:</label>
+        <label class="form-label" for="chapter" style="width: 20%">Kapitel:</label>
         {{ addquestions.chapter }}
         <p></p>
         <label class="form-label" for="question" style="width: 20%">Frage:</label>
         {{ addquestions.question }}
         <span class="text-muted">(Pflichtfeld)</span>
         <p></p>
-        <label class="form-label" for="answer_one" style="width: 20%">Korrekte Antwort:</label>
-        {{ addquestions.answer_one }}
+        <label class="form-label" for="correct_answer" style="width: 20%">Korrekte Antwort:</label>
+        {{ addquestions.correct_answer }}
         <span class="text-muted">(Pflichtfeld)</span>
         <p></p>
-        <label class="form-label" for="answer_two" style="width: 20%">Falsche Antwort 1:</label>
-        {{ addquestions.answer_two }}
+        <label class="form-label" for="wrong_answer_1" style="width: 20%">Falsche Antwort 1:</label>
+        {{ addquestions.wrong_answer_1 }}
         <span class="text-muted">(Pflichtfeld)</span>
         <p></p>
-        <label class="form-label" for="answer_three" style="width: 20%">Falsche Antwort 2:</label>
-        {{ addquestions.answer_three }}
+        <label class="form-label" for="wrong_answer_2" style="width: 20%">Falsche Antwort 2:</label>
+        {{ addquestions.wrong_answer_2 }}
         <span class="text-muted">(Pflichtfeld)</span>
         <p></p>
-        <label class="form-label" for="answer_four" style="width: 20%">Falsche Antwort 3:</label>
-        {{ addquestions.answer_four }}
+        <label class="form-label" for="wrong_answer_3" style="width: 20%">Falsche Antwort 3:</label>
+        {{ addquestions.wrong_answer_3 }}
         <span class="text-muted">(Pflichtfeld)</span>
         <p></p>
         <label class="form-label" for="hint" style="width: 20%">Hinweis zur Antwort:</label>
