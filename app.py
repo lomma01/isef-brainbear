@@ -52,9 +52,8 @@ def home():
 
 
 @app.route('/single', methods=['GET'])
+# only for logged in users
 @decorators.requires_auth
-# only for student and dozent
-@decorators.not_admin_only
 def single():
     return render_template('single.html',
                            userinfo=session['profile'],
@@ -63,9 +62,8 @@ def single():
 
 
 @app.route('/multi', methods=['GET'])
+# only for logged in users
 @decorators.requires_auth
-# only for student and dozent
-@decorators.not_admin_only
 def multi():
     return render_template('multi.html',
                            userinfo=session['profile'],
@@ -90,7 +88,7 @@ def dashboard():
 
 
 # Route for add Moduls (hp)
-@app.route('/add_modules', methods=['GET'])
+@app.route('/add_modules', methods=['GET', 'POST'])
 @decorators.requires_auth
 # only for admins and dozent
 @decorators.not_student_only
@@ -102,10 +100,9 @@ def add_modules():
 
 
 # Route for add Questions (hp)
-@app.route('/add_questions', methods=['GET'])
+@app.route('/add_questions', methods=['GET', 'POST'])
+# only for logged in users
 @decorators.requires_auth
-# only for student and dozent
-@decorators.not_admin_only
 def add_questions():
     return render_template('add_questions.html',
                            userinfo=session['profile'],
@@ -145,6 +142,7 @@ def list():
 
 
 @app.route('/about', methods=['GET'])
+# only for logged in users
 @decorators.requires_auth
 def about():
     return render_template('about.html',
