@@ -101,7 +101,26 @@ def insert_question(studiengang_name,module_name,chapter,question,correct_answer
     finally:
         if connect_to_sql_db:
             connect_to_sql_db.close()
+            
+def insert_module(studiengang_name,module_name,designation):
+    try:
+        connect_to_sql_db = sql.connect('database.db')
         
+        query = """INSERT INTO modules 
+                (studiengang_name,
+                module_name,
+                designation)
+                VALUES (?,?,?)"""
+        data = (studiengang_name,module_name,designation)
+        connect_to_sql_db.cursor().execute(query,data)
+        connect_to_sql_db.commit()
+        connect_to_sql_db.close()
+     
+    except sql.Error as error:
+        print("Failed to insert module", error)
+    finally:
+        if connect_to_sql_db:
+            connect_to_sql_db.close()       
 
 #################
 ##table section##
