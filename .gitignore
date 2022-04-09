@@ -3,3 +3,4 @@ students.sqlite3
 config.py
 auth.py
 database.db
+__pycache__/
