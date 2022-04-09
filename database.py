@@ -31,15 +31,6 @@ class DatabaseManager(object):
             rows = curs.fetchall()
             return rows
         
-    def fetch_all_studiengang_rows(self):
-        
-        with self.conn:
-            self.conn.row_factory = sql.Row
-            curs = self.conn.cursor()
-            curs.execute("SELECT * FROM studiengang")
-            rows = curs.fetchall()
-            return rows
-        
 def insert_user_into_user_table(user_id,username,role):
     try:
         connect_to_sql_db = sql.connect('database.db')
@@ -76,13 +67,12 @@ def database_query(query):
     connect_to_sql_db = sql.connect('database.db')
     connect_to_sql_db.cursor().execute(query)
 
-def insert_question(studiengang_name,module_name,chapter,question,correct_answer,wrong_answer_1,wrong_answer_2,wrong_answer_3,hint):
+def insert_question(module_name,chapter,question,correct_answer,wrong_answer_1,wrong_answer_2,wrong_answer_3,hint):
     try:
         connect_to_sql_db = sql.connect('database.db')
         
         query = """INSERT INTO questions 
-                (studiengang_name,
-                module_name,
+                (module_name,
                 chapter,
                 question,
                 correct_answer,
@@ -90,8 +80,8 @@ def insert_question(studiengang_name,module_name,chapter,question,correct_answer
                 wrong_answer_2,
                 wrong_answer_3,
                 hint)
-                VALUES (?,?,?,?,?,?,?,?,?)"""
-        data = (studiengang_name,module_name,chapter,question,correct_answer,wrong_answer_1,wrong_answer_2,wrong_answer_3,hint)
+                VALUES (?,?,?,?,?,?,?,?)"""
+        data = [module_name,chapter,question,correct_answer,wrong_answer_1,wrong_answer_2,wrong_answer_3,hint]
         connect_to_sql_db.cursor().execute(query,data)
         connect_to_sql_db.commit()
         connect_to_sql_db.close()
@@ -102,16 +92,14 @@ def insert_question(studiengang_name,module_name,chapter,question,correct_answer
         if connect_to_sql_db:
             connect_to_sql_db.close()
             
-def insert_module(studiengang_name,module_name,designation):
+def insert_module(module_name):
     try:
         connect_to_sql_db = sql.connect('database.db')
         
         query = """INSERT INTO modules 
-                (studiengang_name,
-                module_name,
-                designation)
-                VALUES (?,?,?)"""
-        data = (studiengang_name,module_name,designation)
+                (module_name)
+                VALUES (?)"""
+        data = [module_name]
         connect_to_sql_db.cursor().execute(query,data)
         connect_to_sql_db.commit()
         connect_to_sql_db.close()
@@ -127,36 +115,20 @@ def insert_module(studiengang_name,module_name,designation):
 #################
 def create_user_table():
     query_users_table = (''' CREATE TABLE IF NOT EXISTS users 
-                      (id         TEXT    PRIMARY KEY,
+                        (id         TEXT    PRIMARY KEY,
                         username    TEXT    NOT NULL,
-                       role        TEXT    NOT NULL
-                      );''')
+                        role        TEXT    NOT NULL
+                        );''')
 
     DatabaseManager().query(query_users_table)
 
 def create_modules_table():
     query_modules_table = (''' CREATE TABLE IF NOT EXISTS modules 
                      (id            INTEGER    PRIMARY KEY AUTOINCREMENT,
-                     module_name    TEXT    UNIQUE,
-                     designation    TEXT    UNIQUE
+                     module_name    TEXT    UNIQUE
                      );''')
 
     DatabaseManager().query(query_modules_table)
-    
-def create_studiengang_table():
-    query_studiengang_table = (''' CREATE TABLE IF NOT EXISTS studiengang 
-                     (id                INTEGER    PRIMARY KEY AUTOINCREMENT,
-                     studiengang_name   TEXT    UNIQUE
-                     );''')
-    
-    query_insert_studiengaenge = (''' INSERT OR IGNORE INTO studiengang 
-                     (studiengang_name)
-                     VALUES ('Informatik'),
-                            ('Wirtschaftsinformatik')
-                     ;''')
-
-    DatabaseManager().query(query_studiengang_table)
-    DatabaseManager().query(query_insert_studiengaenge)
 
 def create_highscore_table():
     query_highscore_table = (''' CREATE TABLE IF NOT EXISTS highscores 
@@ -173,7 +145,6 @@ def create_highscore_table():
 def create_question_table():
     query_question_table = (''' CREATE TABLE IF NOT EXISTS questions 
                             (id                 INTEGER    PRIMARY KEY AUTOINCREMENT,
-                            studiengang_name    TEXT    NOT NULL,
                             module_name         TEXT    NOT NULL,
                             chapter             TEXT    NOT NULL,
                             question            TEXT    NOT NULL,
@@ -182,7 +153,6 @@ def create_question_table():
                             wrong_answer_2      TEXT    NOT NULL,
                             wrong_answer_3      TEXT    NOT NULL,
                             hint                TEXT,
-                            FOREIGN KEY(studiengang_name) REFERENCES studiengang(id),
                             FOREIGN KEY(module_name) REFERENCES modules(id)
                             );''')
 
@@ -193,6 +163,5 @@ def create_all_tables():
     create_modules_table()
     create_highscore_table()
     create_question_table()
-    create_studiengang_table()
     
 create_all_tables()
