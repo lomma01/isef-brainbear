@@ -1,5 +1,6 @@
 import sqlite3 as sql
 
+
 class DatabaseManager(object):
     def __init__(self):
         self.conn = sql.connect('database.db')

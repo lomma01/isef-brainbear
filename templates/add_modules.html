@@ -1,18 +1,26 @@
 {% extends "layout.html" %}
 {% block content %}
-
-<div class="col-md-7 col-lg-8">
-    <!--Hier ist die Methode und die ID eventuell muss die für das Backend angepasst werden-->
+<div class="container">
     <form method="post" id="modul">
-        <label class="form-label" for="kurs-id">Kurskürzel:</label>
-        <input type="text" class="form-control" id="kurs-id" placeholder="example01">
-        <label class="form-label" for="designation">Bezeichnung des Kurses:</label>
-        <input type="text" class="form-control" id="designation" placeholder="example cours for IT">
-        <label class="form-label" for="chapter">Kapitel:</label>
-        <input type="text" class="form-control" id="chapter" placeholder="2.4 example-chapter" disabled>
-        <hr class="my-4">
-        <button class="w-1000 btn btn-primary btn-lg" type="submit">Kapitel hinzufügen</button>
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+        <label class="form-label" for="studiengang_name" style="width: 10%">Studiengang:</label>
+        {{ addmodule.studiengang_name }}
+        <span class="text-muted">(Pflichtfeld)</span>
+        <p></p>
+        <label class="form-label" for="module_name" style="width: 10%">Kurskürzel:</label>
+        {{ addmodule.module_name }}
+        <span class="text-muted">(Pflichtfeld)</span>
+        <p></p>
+        <label class="form-label" for="designation" style="width: 10%">Bezeichnung:</label>
+        {{ addmodule.designation }}
+        <span class="text-muted">(Pflichtfeld)</span>
+        <p></p>
+        <label class="form-label" for="chapter" style="width: 10%">Kapitel:</label>
+        {{ addmodule.chapter }}
+        <span class="text-muted">(Pflichtfeld)</span>
+        <p></p>
+        <input type=submit class="btn btn-primary" name='speichern' value='Speichern'>
+        <a href="dashboard" class="btn btn-primary">Abbrechen</a>
     </form>
 </div>
-
 {% endblock %}

@@ -2,11 +2,14 @@ from flask import redirect
 from flask import session
 from flask import url_for
 from functools import wraps
-from wtforms import Form, StringField
+from wtforms import Form, StringField, SelectField, TextAreaField, validators
 import database
 
 # put your user_id here
-ADMINS = ["github|59766382", "github|37813763", "github|95571837", "github|59029239"]
+ADMINS = [
+    "github|59766382", "github|37813763", "github|95571837", "github|59029239"
+]
+
 
 # Decorator
 def requires_auth(f):
@@ -120,5 +123,59 @@ def not_student_only(f):
 
 
 class UpdateRoles(Form):
-    id = StringField('ID')
-    role = StringField('Rolle')
+    roles = ['is_student', 'is_dozent', 'is_admin']
+    userstore = database.DatabaseManager().fetch_all_user_rows()
+    userlist = []
+    for i in userstore:
+        userlist.append(i["id"])
+    id = SelectField('ID', choices=userlist)
+    role = SelectField('Rolle', choices=roles)
+
+
+class AddModule(Form):
+    id = StringField('id', validators=[validators.DataRequired()])
+    studiengang_name = StringField("studiengang_name",
+                                   validators=[validators.DataRequired()])
+    module_name = StringField('module_name',
+                              validators=[validators.DataRequired()])
+    designation = StringField('designation',
+                              validators=[validators.DataRequired()
+                                          ])  # Beschreibung des Kurses
+    chapter = StringField('chapter', validators=[validators.DataRequired()
+                                                 ])  # Kapitel / Lektion
+
+
+class AddQuestions(Form):
+    # modulestore = database.DatabaseManager()....
+    courselist = []  # Liste der Studiengänge
+    modulelist = []  # Liste der Kurskürzel
+    chapterlist = []  # Liste der Kapitel / Lektionen
+    '''for i in modulestore:
+        courselist.append(i["studiengang_name"])
+        modulelist.append(i["module_name"])
+        chapterlist.append(i["chapter"])'''
+    studiengang_name = SelectField("studiengang_name", choices=courselist)
+    module_name = SelectField('module_name', choices=modulelist)
+    chapter = SelectField('chapter', choices=chapterlist)
+    question = TextAreaField('question',
+                             validators=[validators.DataRequired()])
+    # question = StringField('question', validators=[validators.DataRequired()])  # Frage
+    correct_answer = TextAreaField('correct_answer',
+                                   validators=[validators.DataRequired()
+                                               ])  # Antwort 1
+    wrong_answer_1 = TextAreaField('wrong_answer_1',
+                                   validators=[validators.DataRequired()
+                                               ])  # Antwort 2
+    wrong_answer_2 = TextAreaField('wrong_answer_2',
+                                   validators=[validators.DataRequired()
+                                               ])  # Antwort 3
+    wrong_answer_3 = TextAreaField('wrong_answer_3',
+                                   validators=[validators.DataRequired()
+                                               ])  # Antwort 4
+    hint = TextAreaField('hint')  # Hinweis optional
+
+
+def output(x):
+    with open("output.txt", "w") as file:
+        file.write(str(x))
+        file.close()

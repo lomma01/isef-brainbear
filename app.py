@@ -8,7 +8,6 @@ from flask_wtf.csrf import CSRFProtect
 from urllib.parse import urlencode  # Abweichung von OAuth-Quickstarts
 import auth
 import json
-import sqlite3 as sql
 import decorators
 from flask import request
 import database
@@ -93,7 +92,16 @@ def dashboard():
 # only for admins and dozent
 @decorators.not_student_only
 def add_modules():
+    addmodule = decorators.AddModule(request.form)
+    if request.method == 'POST':
+        studiengang_name = addmodule.studiengang_name.data
+        module_name = addmodule.module_name.data
+        designation = addmodule.designation.data
+        chapter = addmodule.chapter.data
+        # SQL Statement addmodule
+        
     return render_template('add_modules.html',
+                           addmodule=addmodule,
                            userinfo=session['profile'],
                            userinfo_pretty=json.dumps(session['jwt_payload'],
                                                       indent=4))
@@ -104,7 +112,21 @@ def add_modules():
 # only for logged in users
 @decorators.requires_auth
 def add_questions():
+    addquestions = decorators.AddQuestions(request.form)
+    if request.method == 'POST':
+        studiengang_name = addquestions.studiengang_name.data
+        module_name = addquestions.module_name.data
+        chapter = addquestions.chapter.data
+        question = addquestions.question.data
+        correct_answer = addquestions.correct_answer.data
+        wrong_answer_1 = addquestions.wrong_answer_1.data
+        wrong_answer_2 = addquestions.wrong_answer_2.data
+        wrong_answer_3 = addquestions.wrong_answer_3.data
+        hint = addquestions.hint.data
+        # SQL Statement frommodule)
+        
     return render_template('add_questions.html',
+                           addquestions=addquestions,
                            userinfo=session['profile'],
                            userinfo_pretty=json.dumps(session['jwt_payload'],
                                                       indent=4))
