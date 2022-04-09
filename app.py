@@ -123,7 +123,8 @@ def add_questions():
         wrong_answer_2 = addquestions.wrong_answer_2.data
         wrong_answer_3 = addquestions.wrong_answer_3.data
         hint = addquestions.hint.data
-        # SQL Statement frommodule)
+        
+        database.insert_question(studiengang_name,module_name,chapter,question,correct_answer,wrong_answer_1,wrong_answer_2,wrong_answer_3,hint)
         
     return render_template('add_questions.html',
                            addquestions=addquestions,
