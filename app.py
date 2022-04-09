@@ -98,7 +98,8 @@ def add_modules():
         module_name = addmodule.module_name.data
         designation = addmodule.designation.data
         chapter = addmodule.chapter.data
-        # SQL Statement addmodule
+        
+        database.insert_module(studiengang_name,module_name,designation)
         
     return render_template('add_modules.html',
                            addmodule=addmodule,
