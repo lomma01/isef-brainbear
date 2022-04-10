@@ -94,12 +94,9 @@ def dashboard():
 def add_modules():
     addmodule = decorators.AddModule(request.form)
     if request.method == 'POST':
-        studiengang_name = addmodule.studiengang_name.data
         module_name = addmodule.module_name.data
-        designation = addmodule.designation.data
-        chapter = addmodule.chapter.data
         
-        database.insert_module(studiengang_name,module_name,designation)
+        database.insert_module(module_name)
         
     return render_template('add_modules.html',
                            addmodule=addmodule,
@@ -115,7 +112,6 @@ def add_modules():
 def add_questions():
     addquestions = decorators.AddQuestions(request.form)
     if request.method == 'POST':
-        studiengang_name = addquestions.studiengang_name.data
         module_name = addquestions.module_name.data
         chapter = addquestions.chapter.data
         question = addquestions.question.data
@@ -125,7 +121,7 @@ def add_questions():
         wrong_answer_3 = addquestions.wrong_answer_3.data
         hint = addquestions.hint.data
         
-        database.insert_question(studiengang_name,module_name,chapter,question,correct_answer,wrong_answer_1,wrong_answer_2,wrong_answer_3,hint)
+        database.insert_question(module_name,chapter,question,correct_answer,wrong_answer_1,wrong_answer_2,wrong_answer_3,hint)
         
     return render_template('add_questions.html',
                            addquestions=addquestions,
