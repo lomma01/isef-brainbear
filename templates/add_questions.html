@@ -1,11 +1,10 @@
 {% extends "layout.html" %}
 {% block content %}
 <div class="container">
+    <h4>Frage hinzufügen</h4>
+    <p></p>
     <form method="post" id="questions_add">
         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
-        <label class="form-label" for="studiengang_name" style="width: 20%">Studiengang:</label>
-        {{ addquestions.studiengang_name }}
-        <p></p>
         <label class="form-label" for="module_name" style="width: 20%">Kurskürzel:</label>
         {{ addquestions.module_name }}
         <p></p>

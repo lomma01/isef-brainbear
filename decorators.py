@@ -133,30 +133,17 @@ class UpdateRoles(Form):
 
 
 class AddModule(Form):
-    id = StringField('id', validators=[validators.DataRequired()])
-    studiengang_name = StringField("studiengang_name",
-                                   validators=[validators.DataRequired()])
     module_name = StringField('module_name',
                               validators=[validators.DataRequired()])
-    designation = StringField('designation',
-                              validators=[validators.DataRequired()
-                                          ])  # Beschreibung des Kurses
-    chapter = StringField('chapter', validators=[validators.DataRequired()
-                                                 ])  # Kapitel / Lektion
 
 
 class AddQuestions(Form):
-    # modulestore = database.DatabaseManager()....
-    courselist = []  # Liste der Studiengänge
+    modulestore = database.DatabaseManager().fetch_all_module_rows()
     modulelist = []  # Liste der Kurskürzel
-    chapterlist = []  # Liste der Kapitel / Lektionen
-    '''for i in modulestore:
-        courselist.append(i["studiengang_name"])
+    for i in modulestore:
         modulelist.append(i["module_name"])
-        chapterlist.append(i["chapter"])'''
-    studiengang_name = SelectField("studiengang_name", choices=courselist)
     module_name = SelectField('module_name', choices=modulelist)
-    chapter = SelectField('chapter', choices=chapterlist)
+    chapter = StringField('chapter', validators=[validators.DataRequired()])
     question = TextAreaField('question',
                              validators=[validators.DataRequired()])
     # question = StringField('question', validators=[validators.DataRequired()])  # Frage
