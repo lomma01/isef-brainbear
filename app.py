@@ -99,9 +99,6 @@ def add_modules():
         
         database.insert_module(module_name)
         flash('Modul wurde erfolgreich hinzugefügt.')
-        database.DatabaseManager().conn.commit()
-        
-
         return redirect('/add_modules')
         
     return render_template('add_modules.html',

@@ -138,7 +138,6 @@ class AddModule(Form):
 
 
 class AddQuestions(Form):
-    database.database_query
     modulestore = database.DatabaseManager().fetch_all_module_rows()
     modulelist = []  # Liste der Kurskürzel
     for i in modulestore:
@@ -147,7 +146,6 @@ class AddQuestions(Form):
     chapter = StringField('chapter', validators=[validators.DataRequired()])
     question = TextAreaField('question',
                              validators=[validators.DataRequired()])
-    # question = StringField('question', validators=[validators.DataRequired()])  # Frage
     correct_answer = TextAreaField('correct_answer',
                                    validators=[validators.DataRequired()
                                                ])  # Antwort 1
