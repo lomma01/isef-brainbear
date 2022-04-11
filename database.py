@@ -1,13 +1,11 @@
 import sqlite3 as sql
 
-DATABASE = 'database.db'
+DATABASE = 'database_db'
 
 
 class DatabaseManager(object):
     def __init__(self):
         self.conn = sql.connect(DATABASE)
-        self.conn.execute('pragma foreign_keys = on')
-        self.conn.commit()
         self.cur = self.conn.cursor()
 
     def query(self, query):
@@ -122,6 +120,43 @@ def insert_module(module_name):
             connect_to_sql_db.close()
 
 
+class UpdateTables:
+    def __init__(self):
+        self.conn = sql.connect(DATABASE)
+        self.cur = self.conn.cursor()
+
+    def update_module_name(self, new_name, module_name):
+        query_update_module_name = """UPDATE OR IGNORE modules SET module_name = ? WHERE module_name = ?"""
+        query_update_all_related_questions = """UPDATE OR IGNORE questions SET module_name = ? WHERE module_name = ?"""
+        data = [new_name, module_name]
+        self.cur.execute(query_update_module_name, data)
+        self.cur.execute(query_update_all_related_questions, data)
+        self.conn.commit()
+
+    def update_question_columns(self, column_name_that_will_be_changed,
+                                changed_value, name_of_question_to_be_changed):
+        if column_name_that_will_be_changed == "module_name":
+            query = """UPDATE questions SET module_name = ? WHERE question = ?"""
+        if column_name_that_will_be_changed == "chapter":
+            query = """UPDATE questions SET chapter = ? WHERE question = ?"""
+        if column_name_that_will_be_changed == "question":
+            query = """UPDATE questions SET question = ? WHERE question = ?"""
+        if column_name_that_will_be_changed == "correct_answer":
+            query = """UPDATE questions SET correct_answer = ? WHERE question = ?"""
+        if column_name_that_will_be_changed == "wrong_answer_1":
+            query = """UPDATE questions SET wrong_answer_1 = ? WHERE question = ?"""
+        if column_name_that_will_be_changed == "wrong_answer_2":
+            query = """UPDATE questions SET wrong_answer_2 = ? WHERE question = ?"""
+        if column_name_that_will_be_changed == "wrong_answer_3":
+            query = """UPDATE questions SET wrong_answer_3 = ? WHERE question = ?"""
+        if column_name_that_will_be_changed == "hint":
+            query = """UPDATE questions SET hint = ? WHERE question = ?"""
+
+        data = [changed_value, name_of_question_to_be_changed]
+        self.cur.execute(query, data)
+        self.conn.commit()
+
+
 #################
 ##table section##
 #################
@@ -149,9 +184,7 @@ def create_highscore_table():
                             (id             INTEGER    PRIMARY KEY AUTOINCREMENT,
                             user_id         TEXT    NOT NULL,
                             module_name     TEXT    NOT NULL,
-                            highscore       INT,
-                            FOREIGN KEY(user_id) REFERENCES users(id),
-                            FOREIGN KEY(module_name) REFERENCES modules(id)
+                            highscore       INT
                             );''')
 
     DatabaseManager().query(query_highscore_table)
@@ -167,8 +200,7 @@ def create_question_table():
                             wrong_answer_1      TEXT    NOT NULL,
                             wrong_answer_2      TEXT    NOT NULL,
                             wrong_answer_3      TEXT    NOT NULL,
-                            hint                TEXT,
-                            FOREIGN KEY(module_name) REFERENCES modules(id)
+                            hint                TEXT
                             );''')
 
     DatabaseManager().query(query_question_table)
