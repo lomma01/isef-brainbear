@@ -124,12 +124,15 @@ def not_student_only(f):
 
 class UpdateRoles(Form):
     roles = ['is_student', 'is_dozent', 'is_admin']
-    userstore = database.DatabaseManager().fetch_all_user_rows()
-    userlist = []
-    for i in userstore:
-        userlist.append(i["id"])
-    id = SelectField('ID', choices=userlist)
+    id = SelectField()
     role = SelectField('Rolle', choices=roles)
+
+    def __init__(self, *args, **kwargs):
+        super(UpdateRoles, self).__init__(*args, **kwargs)
+        userlist = []
+        for i in database.DatabaseManager().fetch_all_user_rows():
+            userlist.append(i["id"])
+        self.id.choices = userlist
 
 
 class AddModule(Form):
@@ -138,11 +141,7 @@ class AddModule(Form):
 
 
 class AddQuestions(Form):
-    modulestore = database.DatabaseManager().fetch_all_module_rows()
-    modulelist = []  # Liste der Kurskürzel
-    for i in modulestore:
-        modulelist.append(i["module_name"])
-    module_name = SelectField('module_name', choices=modulelist)
+    module_name = SelectField()
     chapter = StringField('chapter', validators=[validators.DataRequired()])
     question = TextAreaField('question',
                              validators=[validators.DataRequired()])
@@ -159,6 +158,13 @@ class AddQuestions(Form):
                                    validators=[validators.DataRequired()
                                                ])  # Antwort 4
     hint = TextAreaField('hint')  # Hinweis optional
+
+    def __init__(self, *args, **kwargs):
+        super(AddQuestions, self).__init__(*args, **kwargs)
+        modulelist = []
+        for i in database.DatabaseManager().fetch_all_module_rows():
+            modulelist.append(i["module_name"])
+        self.module_name.choices = modulelist
 
 
 def output(x):

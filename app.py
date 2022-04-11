@@ -156,6 +156,7 @@ def list():
         id = roleupdate.id.data
         role = roleupdate.role.data
         database.update_user_role(role,id)
+        flash('Rolle wurde angepasst.')
         return redirect('/list')
 
     rows = database.DatabaseManager().fetch_all_user_rows()
