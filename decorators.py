@@ -138,6 +138,7 @@ class AddModule(Form):
 
 
 class AddQuestions(Form):
+    database.database_query
     modulestore = database.DatabaseManager().fetch_all_module_rows()
     modulelist = []  # Liste der Kurskürzel
     for i in modulestore:
