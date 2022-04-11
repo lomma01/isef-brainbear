@@ -11,6 +11,7 @@ import json
 import decorators
 from flask import request
 import database
+from flask import flash
 
 app = Flask(__name__)
 csrf = CSRFProtect()
@@ -97,6 +98,8 @@ def add_modules():
         module_name = addmodule.module_name.data
         
         database.insert_module(module_name)
+        flash('Modul wurde erfolgreich hinzugefügt.')
+        return redirect('/add_modules')
         
     return render_template('add_modules.html',
                            addmodule=addmodule,
@@ -122,6 +125,8 @@ def add_questions():
         hint = addquestions.hint.data
         
         database.insert_question(module_name,chapter,question,correct_answer,wrong_answer_1,wrong_answer_2,wrong_answer_3,hint)
+        flash('Frage wurde erfolgreich hinzugefügt.')
+        return redirect('/add_questions')
         
     return render_template('add_questions.html',
                            addquestions=addquestions,
@@ -151,6 +156,8 @@ def list():
         id = roleupdate.id.data
         role = roleupdate.role.data
         database.update_user_role(role,id)
+        flash('Rolle wurde angepasst.')
+        return redirect('/list')
 
     rows = database.DatabaseManager().fetch_all_user_rows()
     return render_template("list.html",

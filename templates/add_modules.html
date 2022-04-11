@@ -1,22 +1,19 @@
 {% extends "layout.html" %}
 {% block content %}
 <div class="container">
+    {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                    {% for message in messages %}
+                    <div class="alert alert-info" role="alert">{{ message }}</div>
+                    {% endfor %}
+                {% endif %}
+                {% endwith %}
+    <h4>Module hinzufügen</h4>
+    <p></p>
     <form method="post" id="modul">
         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
-        <label class="form-label" for="studiengang_name" style="width: 10%">Studiengang:</label>
-        {{ addmodule.studiengang_name }}
-        <span class="text-muted">(Pflichtfeld)</span>
-        <p></p>
         <label class="form-label" for="module_name" style="width: 10%">Kurskürzel:</label>
         {{ addmodule.module_name }}
-        <span class="text-muted">(Pflichtfeld)</span>
-        <p></p>
-        <label class="form-label" for="designation" style="width: 10%">Bezeichnung:</label>
-        {{ addmodule.designation }}
-        <span class="text-muted">(Pflichtfeld)</span>
-        <p></p>
-        <label class="form-label" for="chapter" style="width: 10%">Kapitel:</label>
-        {{ addmodule.chapter }}
         <span class="text-muted">(Pflichtfeld)</span>
         <p></p>
         <input type=submit class="btn btn-primary" name='speichern' value='Speichern'>

@@ -1,6 +1,13 @@
 {% extends "layout.html" %}
 {% block content %}
 <div class="container">
+    {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                    {% for message in messages %}
+                    <div class="alert alert-info" role="alert">{{ message }}</div>
+                    {% endfor %}
+                {% endif %}
+                {% endwith %}
     <h4>Userverwaltung</h4>
     <table border=3 rules=rows style="width:100%" aria-describedby="overview users">
         <caption>Tabelle: Übersicht User, Rollen und IDs</caption>
