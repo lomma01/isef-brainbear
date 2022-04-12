@@ -153,9 +153,9 @@ def list():
     # UPDATE roles
     roleupdate = decorators.UpdateRoles(request.form)
     if request.method == 'POST' and roleupdate.validate():
-        id = roleupdate.id.data
+        user_id = roleupdate.id.data
         role = roleupdate.role.data
-        database.update_user_role(role,id)
+        database.update_user_role(role,user_id)
         flash('Rolle wurde angepasst.')
         return redirect('/list')
 

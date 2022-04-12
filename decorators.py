@@ -26,15 +26,12 @@ def requires_auth(f):
 # Checks if user_id from session is present in userstore from db and member of specific role
 def is_admin():
     userstore = database.DatabaseManager().fetch_all_user_rows()
-    if session["profile"]["user_id"] in ADMINS:
-        database.update_user_role("is_admin", session["profile"]["user_id"])
-        return True
-    else:
-        for i in userstore:
-            if session["profile"]["user_id"] in i and "is_admin" in i:
-                return True
-            else:
-                continue
+    for i in userstore:
+        if session["profile"]["user_id"] in ADMINS or (session["profile"]["user_id"] in i and "is_admin" in i):
+            database.update_user_role("is_admin", session["profile"]["user_id"])
+            return True
+        else:
+            continue
 
 
 def is_dozent():
