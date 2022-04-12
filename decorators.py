@@ -27,8 +27,10 @@ def requires_auth(f):
 def is_admin():
     userstore = database.DatabaseManager().fetch_all_user_rows()
     for i in userstore:
-        if session["profile"]["user_id"] in ADMINS or (session["profile"]["user_id"] in i and "is_admin" in i):
-            database.update_user_role("is_admin", session["profile"]["user_id"])
+        if session["profile"]["user_id"] in ADMINS or (
+                session["profile"]["user_id"] in i and "is_admin" in i):
+            database.update_user_role("is_admin",
+                                      session["profile"]["user_id"])
             return True
         else:
             continue
@@ -135,6 +137,18 @@ class UpdateRoles(Form):
 class AddModule(Form):
     module_name = StringField('module_name',
                               validators=[validators.DataRequired()])
+
+
+class EditModule(Form):
+    module_name_old = SelectField()
+    module_name_new = StringField()
+
+    def __init__(self, *args, **kwargs):
+        super(EditModule, self).__init__(*args, **kwargs)
+        modulelist = []
+        for i in database.DatabaseManager().fetch_all_module_rows():
+            modulelist.append(i["module_name"])
+        self.module_name_old.choices = modulelist
 
 
 class AddQuestions(Form):
