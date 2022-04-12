@@ -1,6 +1,6 @@
 import sqlite3 as sql
 
-DATABASE = 'database_db'
+DATABASE = 'database.db'
 
 
 class DatabaseManager(object):
