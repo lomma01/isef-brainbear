@@ -115,12 +115,16 @@ def add_modules():
 def edit_modules():
     editmodule = decorators.EditModule(request.form)
     if request.method == 'POST':
-        module_name_old = request.form.get("module_name_old")
-        module_name_new = request.form.get("module_name_new")
-
-        database.UpdateTables().update_module_name(module_name_new,
-                                                   module_name_old)
-        flash('Modul wurde erfolgreich geändert.')
+        if request.form.get("checkbox") == "y" and request.form.get(
+                "module_name_new") != None:
+            # SQL Statement DELETE via module_name_new
+            flash('Modul wurde erfolgreich gelöscht.')
+        else:
+            module_name_old = request.form.get("module_name_old")
+            module_name_new = request.form.get("module_name_new")
+            database.UpdateTables().update_module_name(module_name_new,
+                                                       module_name_old)
+            flash('Modul wurde erfolgreich geändert.')
         return redirect('/edit_modules')
 
     return render_template('edit_modules.html',

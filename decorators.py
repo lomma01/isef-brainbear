@@ -2,7 +2,7 @@ from flask import redirect
 from flask import session
 from flask import url_for
 from functools import wraps
-from wtforms import Form, StringField, SelectField, TextAreaField, validators
+from wtforms import Form, StringField, SelectField, TextAreaField, validators, BooleanField
 import database
 
 # put your user_id here
@@ -141,7 +141,9 @@ class AddModule(Form):
 
 class EditModule(Form):
     module_name_old = SelectField()
-    module_name_new = StringField()
+    module_name_new = StringField("module_name_new",
+                                  validators=[validators.DataRequired()])
+    checkbox = BooleanField()
 
     def __init__(self, *args, **kwargs):
         super(EditModule, self).__init__(*args, **kwargs)
