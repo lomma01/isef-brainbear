@@ -95,7 +95,6 @@ def dashboard():
 def add_modules():
     addmodule = decorators.AddModule(request.form)
     if request.method == 'POST':
-        #module_name = addmodule.module_name.data
         module_name = request.form.get("module_name")
 
         database.insert_module(module_name)
@@ -116,8 +115,8 @@ def add_modules():
 def edit_modules():
     editmodule = decorators.EditModule(request.form)
     if request.method == 'POST':
-        module_name_old = editmodule.module_name_old.data
-        module_name_new = editmodule.module_name_new.data
+        module_name_old = request.form.get("module_name_old")
+        module_name_new = request.form.get("module_name_new")
 
         database.UpdateTables().update_module_name(module_name_new,
                                                    module_name_old)
@@ -138,14 +137,14 @@ def edit_modules():
 def add_questions():
     addquestions = decorators.AddQuestions(request.form)
     if request.method == 'POST':
-        module_name = addquestions.module_name.data
-        chapter = addquestions.chapter.data
-        question = addquestions.question.data
-        correct_answer = addquestions.correct_answer.data
-        wrong_answer_1 = addquestions.wrong_answer_1.data
-        wrong_answer_2 = addquestions.wrong_answer_2.data
-        wrong_answer_3 = addquestions.wrong_answer_3.data
-        hint = addquestions.hint.data
+        module_name = request.form.get("module_name")
+        chapter = request.form.get("chapter")
+        question = request.form.get("question")
+        correct_answer = request.form.get("correct_answer")
+        wrong_answer_1 = request.form.get("wrong_answer_1")
+        wrong_answer_2 = request.form.get("wrong_answer_2")
+        wrong_answer_3 = request.form.get("wrong_answer_3")
+        hint = request.form.get("hint")
 
         database.insert_question(module_name, chapter, question,
                                  correct_answer, wrong_answer_1,
@@ -180,8 +179,8 @@ def list():
     # UPDATE roles
     roleupdate = decorators.UpdateRoles(request.form)
     if request.method == 'POST' and roleupdate.validate():
-        user_id = roleupdate.id.data
-        role = roleupdate.role.data
+        user_id = request.form.get("id")
+        role = request.form.get("role")
         database.update_user_role(role, user_id)
         flash('Rolle wurde angepasst.')
         return redirect('/list')
