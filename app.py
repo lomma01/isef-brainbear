@@ -95,7 +95,8 @@ def dashboard():
 def add_modules():
     addmodule = decorators.AddModule(request.form)
     if request.method == 'POST':
-        module_name = addmodule.module_name.data
+        #module_name = addmodule.module_name.data
+        module_name = request.form.get("module_name")
 
         database.insert_module(module_name)
         flash('Modul wurde erfolgreich hinzugefügt.')
