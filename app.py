@@ -163,7 +163,9 @@ def add_questions():
 # only for logged in users
 @decorators.requires_auth
 def rank():
+    rows = database.DatabaseManager().fetch_all_highscore_rows()
     return render_template('rank.html',
+                           rows=rows,
                            userinfo=session['profile'],
                            userinfo_pretty=json.dumps(session['jwt_payload'],
                                                       indent=4))
