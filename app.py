@@ -95,14 +95,37 @@ def dashboard():
 def add_modules():
     addmodule = decorators.AddModule(request.form)
     if request.method == 'POST':
-        module_name = addmodule.module_name.data
-        
+        #module_name = addmodule.module_name.data
+        module_name = request.form.get("module_name")
+
         database.insert_module(module_name)
         flash('Modul wurde erfolgreich hinzugefügt.')
         return redirect('/add_modules')
-        
+
     return render_template('add_modules.html',
                            addmodule=addmodule,
+                           userinfo=session['profile'],
+                           userinfo_pretty=json.dumps(session['jwt_payload'],
+                                                      indent=4))
+
+
+@app.route('/edit_modules', methods=['GET', 'POST'])
+@decorators.requires_auth
+# only for admins and dozent
+@decorators.not_student_only
+def edit_modules():
+    editmodule = decorators.EditModule(request.form)
+    if request.method == 'POST':
+        module_name_old = editmodule.module_name_old.data
+        module_name_new = editmodule.module_name_new.data
+
+        database.UpdateTables().update_module_name(module_name_new,
+                                                   module_name_old)
+        flash('Modul wurde erfolgreich geändert.')
+        return redirect('/edit_modules')
+
+    return render_template('edit_modules.html',
+                           editmodule=editmodule,
                            userinfo=session['profile'],
                            userinfo_pretty=json.dumps(session['jwt_payload'],
                                                       indent=4))
@@ -123,11 +146,13 @@ def add_questions():
         wrong_answer_2 = addquestions.wrong_answer_2.data
         wrong_answer_3 = addquestions.wrong_answer_3.data
         hint = addquestions.hint.data
-        
-        database.insert_question(module_name,chapter,question,correct_answer,wrong_answer_1,wrong_answer_2,wrong_answer_3,hint)
+
+        database.insert_question(module_name, chapter, question,
+                                 correct_answer, wrong_answer_1,
+                                 wrong_answer_2, wrong_answer_3, hint)
         flash('Frage wurde erfolgreich hinzugefügt.')
         return redirect('/add_questions')
-        
+
     return render_template('add_questions.html',
                            addquestions=addquestions,
                            userinfo=session['profile'],
@@ -139,7 +164,9 @@ def add_questions():
 # only for logged in users
 @decorators.requires_auth
 def rank():
+    rows = database.DatabaseManager().fetch_all_highscore_rows()
     return render_template('rank.html',
+                           rows=rows,
                            userinfo=session['profile'],
                            userinfo_pretty=json.dumps(session['jwt_payload'],
                                                       indent=4))
@@ -155,7 +182,7 @@ def list():
     if request.method == 'POST' and roleupdate.validate():
         user_id = roleupdate.id.data
         role = roleupdate.role.data
-        database.update_user_role(role,user_id)
+        database.update_user_role(role, user_id)
         flash('Rolle wurde angepasst.')
         return redirect('/list')
 
@@ -206,9 +233,9 @@ def callback_handling():
     # column names for sql database -> you also have to change it in the database.py!!!
     username = userinfo['name']
     user_id = userinfo['sub']
-    
+
     # for inital entries we use is_student
-    database.insert_user_into_user_table(user_id,username,"is_student")
+    database.insert_user_into_user_table(user_id, username, "is_student")
 
     return redirect('/dashboard')
 

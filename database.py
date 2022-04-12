@@ -31,6 +31,24 @@ class DatabaseManager(object):
             rows = curs.fetchall()
             return rows
 
+    def fetch_all_question_rows(self):
+
+        with self.conn:
+            self.conn.row_factory = sql.Row
+            curs = self.conn.cursor()
+            curs.execute("SELECT * FROM questions")
+            rows = curs.fetchall()
+            return rows
+
+    def fetch_all_highscore_rows(self):
+
+        with self.conn:
+            self.conn.row_factory = sql.Row
+            curs = self.conn.cursor()
+            curs.execute("SELECT * FROM highscores")
+            rows = curs.fetchall()
+            return rows
+
 
 def insert_user_into_user_table(user_id, username, role):
     try:

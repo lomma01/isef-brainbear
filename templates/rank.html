@@ -1,4 +1,32 @@
 {% extends "layout.html" %}
 {% block content %}
-<div class="container">Highscore</div>
+<div class="container">
+    {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                    {% for message in messages %}
+                    <div class="alert alert-info" role="alert">{{ message }}</div>
+                    {% endfor %}
+                {% endif %}
+                {% endwith %}
+    <h4>Highscore</h4>
+    <table border=3 style="width:100%" aria-describedby="overview users">
+        <caption>Tabelle: Übersicht Rankingliste</caption>
+        <thead>
+            <th>Username</th>
+            <th>Kurs</th>
+            <th>Punkte</th>
+            <tbody>
+                {% for row in rows %}
+                <tr>
+                    <td>{{row["user_id"]}}</td>
+                    <td>{{row["module_name"]}}</td>
+                    <td>{{row["highscore"]}}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </thead>
+    </table>
+    <p></p>
+    <a href="dashboard" class="btn btn-outline-primary">Zurück</a>
+</div>
 {% endblock %}
