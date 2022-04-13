@@ -150,6 +150,12 @@ class UpdateTables:
         self.cur.execute(query_update_module_name, data)
         self.cur.execute(query_update_all_related_questions, data)
         self.conn.commit()
+        
+    def delete_module(self,module_name):
+        query_delete_module = """DELETE FROM modules WHERE module_name = ?"""
+        data = [module_name]
+        self.cur.execute(query_delete_module, data)
+        self.conn.commit()
 
     def update_question_columns(self, column_name_that_will_be_changed,
                                 changed_value, name_of_question_to_be_changed):
@@ -172,6 +178,12 @@ class UpdateTables:
 
         data = [changed_value, name_of_question_to_be_changed]
         self.cur.execute(query, data)
+        self.conn.commit()
+        
+    def delete_question(self,question):
+        query_delete_question = """DELETE FROM questions WHERE question = ?"""
+        data = [question]
+        self.cur.execute(query_delete_question, data)
         self.conn.commit()
 
 
@@ -213,7 +225,7 @@ def create_question_table():
                             (id                 INTEGER    PRIMARY KEY AUTOINCREMENT,
                             module_name         TEXT    NOT NULL,
                             chapter             TEXT    NOT NULL,
-                            question            TEXT    NOT NULL,
+                            question            TEXT    NOT NULL    UNIQUE,
                             correct_answer      TEXT    NOT NULL,
                             wrong_answer_1      TEXT    NOT NULL,
                             wrong_answer_2      TEXT    NOT NULL,
