@@ -1,0 +1,28 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="container">
+    {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                    {% for message in messages %}
+                    <div class="alert alert-info" role="alert">{{ message }}</div>
+                    {% endfor %}
+                {% endif %}
+                {% endwith %}
+    <h4>Frage löschen</h4>
+    <p></p>
+    <form method="post" id="editquestions">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+        <label class="form-label" for="role" style="width: 20%">Fragen auswählen: </label> {{ editquestions.question_list }}
+        <p></p>
+        <label class="form-label" for="role" style="width: 20%">ID eingeben: </label> {{ editquestions.question_del }}
+            <span class="text-muted">(Pflichtfeld)</span>
+            <p></p>
+            <label class="form-label" for="role" style="width: 20%">Frage löschen? </label> {{ editquestions.checkbox }}
+            <span class="text-muted">(Checkbox nur aktivieren, wenn du sicher bist, dass die ganze Frage gelöscht werden soll)</span>
+        <p></p>
+        <input type=submit class="btn btn-outline-primary" name='speichern' value='Speichern'>
+        <a href="dashboard" class="btn btn-outline-primary">Zurück</a>
+    </form>
+    <p></p>
+</div>
+{% endblock %}

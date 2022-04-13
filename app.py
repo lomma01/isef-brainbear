@@ -163,6 +163,28 @@ def add_questions():
                                                       indent=4))
 
 
+@app.route('/edit_questions', methods=['GET', 'POST'])
+# only for logged in users
+@decorators.requires_auth
+def edit_questions():
+    editquestions = decorators.EditQuestions(request.form)
+    rows = database.DatabaseManager().fetch_all_question_rows()
+    
+    if request.method == 'POST':
+        question_del = request.form.get("question_del")
+        if request.form.get("checkbox") == "y" and question_del != None:
+            # database.UpdateTables.delete_question(question_del), besser via ID
+            flash('Frage wurde erfolgreich gelöscht.')
+            return redirect('/edit_questions')
+
+    return render_template('edit_questions.html',
+                           rows=rows,
+                           editquestions=editquestions,
+                           userinfo=session['profile'],
+                           userinfo_pretty=json.dumps(session['jwt_payload'],
+                                                      indent=4))
+
+
 @app.route('/rank', methods=['GET'])
 # only for logged in users
 @decorators.requires_auth

@@ -149,7 +149,7 @@ class EditModule(Form):
         super(EditModule, self).__init__(*args, **kwargs)
         modulelist = []
         for i in database.DatabaseManager().fetch_all_module_rows():
-            modulelist.append(i["module_name"])
+            modulelist.append(i["module_name"] + '| ' + i["question"])
         self.module_name_old.choices = modulelist
 
 
@@ -178,6 +178,19 @@ class AddQuestions(Form):
         for i in database.DatabaseManager().fetch_all_module_rows():
             modulelist.append(i["module_name"])
         self.module_name.choices = modulelist
+
+
+class EditQuestions(Form):
+    question_list = SelectField()
+    question_del = StringField('question_del', validators=[validators.DataRequired()])
+    checkbox = BooleanField()
+
+    def __init__(self, *args, **kwargs):
+        super(EditQuestions, self).__init__(*args, **kwargs)
+        qid = []
+        for i in database.DatabaseManager().fetch_all_question_rows():
+            qid.append("ID: " + str(i["id"]) + " | Kurskürzel: " + i["module_name"] + " | Kapitel: " + i["chapter"] + " | Frage: " + i["question"] + " | Antwort: " + i["correct_answer"])
+        self.question_list.choices = qid
 
 
 def output(x):
