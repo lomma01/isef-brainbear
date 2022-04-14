@@ -62,6 +62,26 @@ def single():
                                                       indent=4))
 
 
+@app.route('/play', methods=['GET', 'POST'])
+# only for logged in users
+@decorators.requires_auth
+def play():
+    solve = decorators.SolveQuestions(request.form)
+    if request.method == 'POST':
+        radio = request.form.get("radio")
+        if radio == solve.answers[0]:
+            flash('Richtige Antwort')
+        else:
+            flash('Falsche Antwort')
+        return redirect('/play')
+        
+    return render_template('play.html',
+                           solve=solve,
+                           userinfo=session['profile'],
+                           userinfo_pretty=json.dumps(session['jwt_payload'],
+                                                      indent=4))
+
+
 @app.route('/multi', methods=['GET'])
 # only for logged in users
 @decorators.requires_auth

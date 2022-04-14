@@ -260,3 +260,4 @@ def lomma():
     tupel = cur.fetchall()
     con.close()
     return tupel
+
