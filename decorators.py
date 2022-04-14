@@ -182,15 +182,16 @@ class AddQuestions(Form):
 
 class EditQuestions(Form):
     question_list = SelectField()
-    question_del = StringField('question_del', validators=[validators.DataRequired()])
+    fields = ['id', 'module_name', 'chapter', 'question', 'correct_answer', 'wrong_answer_1', 'wrong_answer_2', 'wrong_answer_3']
+    question_field_old = SelectField("question_field_old", choices=fields)
+    question_field_new = StringField("question_field_new",
+                                  validators=[validators.DataRequired()])
     checkbox = BooleanField()
 
     def __init__(self, *args, **kwargs):
         super(EditQuestions, self).__init__(*args, **kwargs)
-        qid = []
-        for i in database.DatabaseManager().fetch_all_question_rows():
-            qid.append("ID: " + str(i["id"]) + " | Kurskürzel: " + i["module_name"] + " | Kapitel: " + i["chapter"] + " | Frage: " + i["question"] + " | Antwort: " + i["correct_answer"])
-        self.question_list.choices = qid
+        questions = database.lomma()
+        self.question_list.choices = questions
 
 
 def output(x):

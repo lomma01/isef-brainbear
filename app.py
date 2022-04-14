@@ -12,6 +12,7 @@ import decorators
 from flask import request
 import database
 from flask import flash
+import ast
 
 app = Flask(__name__)
 csrf = CSRFProtect()
@@ -117,7 +118,7 @@ def edit_modules():
     if request.method == 'POST':
         module_name_new = request.form.get("module_name_new")
         module_name_old = request.form.get("module_name_old")
-        
+
         if request.form.get("checkbox") == "y" and module_name_new != None:
             database.UpdateTables().delete_module(module_name_old)
             flash('Modul wurde erfolgreich gelöscht.')
@@ -168,17 +169,25 @@ def add_questions():
 @decorators.requires_auth
 def edit_questions():
     editquestions = decorators.EditQuestions(request.form)
-    rows = database.DatabaseManager().fetch_all_question_rows()
-    
-    if request.method == 'POST':
-        question_del = request.form.get("question_del")
-        if request.form.get("checkbox") == "y" and question_del != None:
-            #database.UpdateTables.delete_question(question_del)
-            flash('Frage wurde erfolgreich gelöscht.')
-            return redirect('/edit_questions')
 
+    if request.method == 'POST':
+        question_list = request.form.get("question_list")
+        question_field_old = request.form.get("question_field_old")
+        question_field_new = request.form.get("question_field_new")
+        if request.form.get("checkbox") == "y":
+            database.UpdateTables().delete_question(question_field_new)
+            flash('Frage wurde erfolgreich gelöscht.')
+        elif request.form.get("checkbox") == None and question_field_old == 'id':
+            flash("Fehler: ID ist unveränderbar")
+        else:
+            question_list_conv = ast.literal_eval(
+                question_list)  # convert class str to class dict
+            question_id = question_list_conv["id"]
+            question_id = str(question_id)
+            database.UpdateTables().update_question_columns(question_field_old, question_field_new, question_id)
+            flash('Frage wurde erfolgreich geändert.')
+        return redirect('/edit_questions')
     return render_template('edit_questions.html',
-                           rows=rows,
                            editquestions=editquestions,
                            userinfo=session['profile'],
                            userinfo_pretty=json.dumps(session['jwt_payload'],

@@ -158,25 +158,25 @@ class UpdateTables:
         self.conn.commit()
 
     def update_question_columns(self, column_name_that_will_be_changed,
-                                changed_value, name_of_question_to_be_changed):
+                                changed_value, id):
         if column_name_that_will_be_changed == "module_name":
-            query = """UPDATE questions SET module_name = ? WHERE question = ?"""
+            query = """UPDATE questions SET module_name = ? WHERE id = ?"""
         if column_name_that_will_be_changed == "chapter":
-            query = """UPDATE questions SET chapter = ? WHERE question = ?"""
+            query = """UPDATE questions SET chapter = ? WHERE id = ?"""
         if column_name_that_will_be_changed == "question":
-            query = """UPDATE questions SET question = ? WHERE question = ?"""
+            query = """UPDATE questions SET question = ? WHERE id = ?"""
         if column_name_that_will_be_changed == "correct_answer":
-            query = """UPDATE questions SET correct_answer = ? WHERE question = ?"""
+            query = """UPDATE questions SET correct_answer = ? WHERE id = ?"""
         if column_name_that_will_be_changed == "wrong_answer_1":
-            query = """UPDATE questions SET wrong_answer_1 = ? WHERE question = ?"""
+            query = """UPDATE questions SET wrong_answer_1 = ? WHERE id = ?"""
         if column_name_that_will_be_changed == "wrong_answer_2":
-            query = """UPDATE questions SET wrong_answer_2 = ? WHERE question = ?"""
+            query = """UPDATE questions SET wrong_answer_2 = ? WHERE id = ?"""
         if column_name_that_will_be_changed == "wrong_answer_3":
-            query = """UPDATE questions SET wrong_answer_3 = ? WHERE question = ?"""
+            query = """UPDATE questions SET wrong_answer_3 = ? WHERE id = ?"""
         if column_name_that_will_be_changed == "hint":
-            query = """UPDATE questions SET hint = ? WHERE question = ?"""
+            query = """UPDATE questions SET hint = ? WHERE id = ?"""
 
-        data = [changed_value, name_of_question_to_be_changed]
+        data = [changed_value, id]
         self.cur.execute(query, data)
         self.conn.commit()
         
@@ -244,3 +244,19 @@ def create_all_tables():
 
 
 create_all_tables()
+
+
+def lomma():
+    def dict_factory(cursor, row):
+        d = {}
+        for idx, col in enumerate(cursor.description):
+            d[col[0]] = row[idx]
+        return d
+
+    con = sql.connect(DATABASE)
+    con.row_factory = dict_factory
+    cur = con.cursor()
+    cur.execute("select * from questions")
+    tupel = cur.fetchall()
+    con.close()
+    return tupel
