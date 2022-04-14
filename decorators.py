@@ -149,7 +149,7 @@ class EditModule(Form):
         super(EditModule, self).__init__(*args, **kwargs)
         modulelist = []
         for i in database.DatabaseManager().fetch_all_module_rows():
-            modulelist.append(i["module_name"] + '| ' + i["question"])
+            modulelist.append(i["module_name"])
         self.module_name_old.choices = modulelist
 
 

@@ -173,7 +173,7 @@ def edit_questions():
     if request.method == 'POST':
         question_del = request.form.get("question_del")
         if request.form.get("checkbox") == "y" and question_del != None:
-            # database.UpdateTables.delete_question(question_del), besser via ID
+            #database.UpdateTables.delete_question(question_del)
             flash('Frage wurde erfolgreich gelöscht.')
             return redirect('/edit_questions')
 
