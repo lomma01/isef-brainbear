@@ -180,9 +180,9 @@ class UpdateTables:
         self.cur.execute(query, data)
         self.conn.commit()
         
-    def delete_question(self,question):
-        query_delete_question = """DELETE FROM questions WHERE question = ?"""
-        data = [question]
+    def delete_question(self,id):
+        query_delete_question = """DELETE FROM questions WHERE id = ?"""
+        data = [id]
         self.cur.execute(query_delete_question, data)
         self.conn.commit()
 
