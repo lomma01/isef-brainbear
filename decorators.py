@@ -2,7 +2,7 @@ from flask import redirect
 from flask import session
 from flask import url_for
 from functools import wraps
-from wtforms import Form, StringField, SelectField, TextAreaField, validators, BooleanField, RadioField, HiddenField
+from wtforms import Form, StringField, SelectField, TextAreaField, validators, BooleanField, RadioField
 import database
 import random
 
