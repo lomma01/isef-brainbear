@@ -2,8 +2,9 @@ from flask import redirect
 from flask import session
 from flask import url_for
 from functools import wraps
-from wtforms import Form, StringField, SelectField, TextAreaField, validators, BooleanField
+from wtforms import Form, StringField, SelectField, TextAreaField, validators, BooleanField, RadioField
 import database
+import random
 
 # put your user_id here
 ADMINS = [
@@ -178,6 +179,48 @@ class AddQuestions(Form):
         for i in database.DatabaseManager().fetch_all_module_rows():
             modulelist.append(i["module_name"])
         self.module_name.choices = modulelist
+
+
+class EditQuestions(Form):
+    question_list = SelectField()
+    fields = [
+        'id', 'module_name', 'chapter', 'question', 'correct_answer',
+        'wrong_answer_1', 'wrong_answer_2', 'wrong_answer_3'
+    ]
+    question_field_old = SelectField("question_field_old", choices=fields)
+    question_field_new = StringField("question_field_new",
+                                     validators=[validators.DataRequired()])
+    checkbox = BooleanField()
+
+    def __init__(self, *args, **kwargs):
+        super(EditQuestions, self).__init__(*args, **kwargs)
+        questions = database.lomma()
+        self.question_list.choices = questions
+
+
+class SolveQuestions(Form):
+    def dict_factory(cursor, row):
+        d = {}
+        for idx, col in enumerate(cursor.description):
+            d[col[0]] = row[idx]
+        return d
+
+    con = database.DatabaseManager().conn
+    cur = con.cursor()
+    con.row_factory = dict_factory
+    cur.execute("select * from questions")
+    tupel = cur.fetchall()
+    liste = []
+    for i in tupel:
+        liste.append(i)  # Quiz in Form einer Liste
+
+    liste = random.sample(liste, len(liste))
+    liste = liste[0]  # nur 1 Frage aus einem zufälligen Pool wählen
+    answers = liste[4], liste[5], liste[6], liste[7]
+    radio = RadioField("Label", choices=answers)
+
+    def __init__(self, *args, **kwargs):
+        super(SolveQuestions, self).__init__(*args, **kwargs)
 
 
 def output(x):

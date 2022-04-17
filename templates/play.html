@@ -1,0 +1,23 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="container">
+    {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                    {% for message in messages %}
+                    <div class="alert alert-info" role="alert">{{ message }}</div>
+                    {% endfor %}
+                {% endif %}
+                {% endwith %}
+    <p></p>
+    <form method=post id="play">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+        <h4>Beantworte die folgende Frage:</h4>
+        <p>Modul: {{ solve.liste[1] }}, Kapitel: {{ solve.liste[2] }}</p>
+        <h5>{{ solve.liste[3] }}</h5>
+        {{ solve.radio }}
+        <p></p>
+        <input type=submit class="btn btn-outline-primary" name='solve' value='Überprüfen'>
+        <a href="dashboard" class="btn btn-outline-primary">Zurück</a>
+    </form>
+</div>
+{% endblock %}

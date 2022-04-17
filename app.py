@@ -12,6 +12,7 @@ import decorators
 from flask import request
 import database
 from flask import flash
+import ast
 
 app = Flask(__name__)
 csrf = CSRFProtect()
@@ -56,6 +57,26 @@ def home():
 @decorators.requires_auth
 def single():
     return render_template('single.html',
+                           userinfo=session['profile'],
+                           userinfo_pretty=json.dumps(session['jwt_payload'],
+                                                      indent=4))
+
+
+@app.route('/play', methods=['GET', 'POST'])
+# only for logged in users
+@decorators.requires_auth
+def play():
+    solve = decorators.SolveQuestions(request.form)
+    if request.method == 'POST':
+        radio = request.form.get("radio")
+        if radio == solve.answers[0]:
+            flash('Richtige Antwort')
+        else:
+            flash('Falsche Antwort')
+        return redirect('/play')
+        
+    return render_template('play.html',
+                           solve=solve,
                            userinfo=session['profile'],
                            userinfo_pretty=json.dumps(session['jwt_payload'],
                                                       indent=4))
@@ -117,7 +138,7 @@ def edit_modules():
     if request.method == 'POST':
         module_name_new = request.form.get("module_name_new")
         module_name_old = request.form.get("module_name_old")
-        
+
         if request.form.get("checkbox") == "y" and module_name_new != None:
             database.UpdateTables().delete_module(module_name_old)
             flash('Modul wurde erfolgreich gelöscht.')
@@ -158,6 +179,36 @@ def add_questions():
 
     return render_template('add_questions.html',
                            addquestions=addquestions,
+                           userinfo=session['profile'],
+                           userinfo_pretty=json.dumps(session['jwt_payload'],
+                                                      indent=4))
+
+
+@app.route('/edit_questions', methods=['GET', 'POST'])
+# only for logged in users
+@decorators.requires_auth
+def edit_questions():
+    editquestions = decorators.EditQuestions(request.form)
+
+    if request.method == 'POST':
+        question_list = request.form.get("question_list")
+        question_field_old = request.form.get("question_field_old")
+        question_field_new = request.form.get("question_field_new")
+        if request.form.get("checkbox") == "y":
+            database.UpdateTables().delete_question(question_field_new)
+            flash('Frage wurde erfolgreich gelöscht.')
+        elif request.form.get("checkbox") == None and question_field_old == 'id':
+            flash("Fehler: ID ist unveränderbar")
+        else:
+            question_list_conv = ast.literal_eval(
+                question_list)  # convert class str to class dict
+            question_id = question_list_conv["id"]
+            question_id = str(question_id)
+            database.UpdateTables().update_question_columns(question_field_old, question_field_new, question_id)
+            flash('Frage wurde erfolgreich geändert.')
+        return redirect('/edit_questions')
+    return render_template('edit_questions.html',
+                           editquestions=editquestions,
                            userinfo=session['profile'],
                            userinfo_pretty=json.dumps(session['jwt_payload'],
                                                       indent=4))
