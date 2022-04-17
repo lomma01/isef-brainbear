@@ -2,7 +2,7 @@ from flask import redirect
 from flask import session
 from flask import url_for
 from functools import wraps
-from wtforms import Form, StringField, SelectField, TextAreaField, validators, BooleanField, RadioField
+from wtforms import Form, StringField, SelectField, TextAreaField, validators, BooleanField, RadioField, HiddenField
 import database
 import random
 
@@ -199,31 +199,34 @@ class EditQuestions(Form):
 
 
 class SolveQuestions(Form):
-    def dict_factory(cursor, row):
-        d = {}
-        for idx, col in enumerate(cursor.description):
-            d[col[0]] = row[idx]
-        return d
-
-    con = database.DatabaseManager().conn
-    cur = con.cursor()
-    con.row_factory = dict_factory
-    cur.execute("select * from questions")
-    tupel = cur.fetchall()
-    liste = []
-    for i in tupel:
-        liste.append(i)  # Quiz in Form einer Liste
-
-    liste = random.sample(liste, len(liste))
-    liste = liste[0]  # nur 1 Frage aus einem zufälligen Pool wählen
-    answers = liste[4], liste[5], liste[6], liste[7]
-    radio = RadioField("Label", choices=answers)
+    radio = RadioField()
 
     def __init__(self, *args, **kwargs):
         super(SolveQuestions, self).__init__(*args, **kwargs)
 
+        def dict_factory(cursor, row):
+            d = {}
+            for idx, col in enumerate(cursor.description):
+                d[col[0]] = row[idx]
+            return d
+
+        con = database.DatabaseManager().conn
+        cur = con.cursor()
+        con.row_factory = dict_factory
+        cur.execute("select * from questions")
+        tupel = cur.fetchall()
+        liste = []
+        for i in tupel:
+            liste.append(i)  # Quiz in Form einer Liste
+        liste = random.sample(liste, len(liste))
+        liste = liste[0]
+        answers = liste[4], liste[5], liste[6], liste[7]
+        answers = random.sample(answers, len(answers))
+        self.liste = liste
+        self.radio.choices = answers
+
 
 def output(x):
-    with open("output.txt", "w") as file:
-        file.write(str(x))
+    with open("output.txt", "a") as file:
+        file.write(str(x) + "\n")
         file.close()

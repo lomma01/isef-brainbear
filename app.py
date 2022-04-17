@@ -1,3 +1,4 @@
+
 from flask import Flask
 from flask import redirect
 from flask import render_template
@@ -67,9 +68,9 @@ def single():
 @decorators.requires_auth
 def play():
     solve = decorators.SolveQuestions(request.form)
+    radio = request.form.get("radio")
     if request.method == 'POST':
-        radio = request.form.get("radio")
-        if radio == solve.answers[0]:
+        if radio == solve.liste[4]:
             flash('Richtige Antwort')
         else:
             flash('Falsche Antwort')
