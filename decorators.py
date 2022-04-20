@@ -185,7 +185,7 @@ class EditQuestions(Form):
     question_list = SelectField()
     fields = [
         'id', 'module_name', 'chapter', 'question', 'correct_answer',
-        'wrong_answer_1', 'wrong_answer_2', 'wrong_answer_3'
+        'wrong_answer_1', 'wrong_answer_2', 'wrong_answer_3','hint'
     ]
     question_field_old = SelectField("question_field_old", choices=fields)
     question_field_new = StringField("question_field_new",
